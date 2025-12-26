@@ -59,14 +59,6 @@ const FEATURES = [
   { id: 'f4', icon: Cpu, title: "Optimized for Efficiency", desc: "Lightweight architecture built for speed. Kotori responds instantly, even on older devices.", colorClass: "text-purple-400" }
 ];
 
-// Define Slot configurations for Desktop morphing
-const BENTO_SLOTS: Record<BentoPos, { top: string; left: string; width: string; height: string }> = {
-  main: { top: '0%', left: '0%', width: '65%', height: '65%' },
-  vert: { top: '0%', left: '67%', width: '33%', height: '65%' },
-  wide: { top: '67%', left: '0%', width: '65%', height: '33%' },
-  small: { top: '67%', left: '67%', width: '33%', height: '33%' }
-};
-
 const BentoCard = React.memo(({
   feature,
   pos,
@@ -76,31 +68,29 @@ const BentoCard = React.memo(({
 }) => {
   const isMain = pos === 'main';
   const { icon: Icon, title, desc, colorClass } = feature;
-  const slot = BENTO_SLOTS[pos];
 
   return (
     <div
-      className={`absolute group bg-card p-6 md:p-8 rounded-[3rem] border transition-all duration-700 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
+      className={`absolute group bg-card p-5 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-700 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
       style={{
-        top: slot.top,
-        left: slot.left,
-        width: slot.width,
-        height: slot.height,
-        // Responsive override for mobile handled via CSS class and media query below
-      }}
+        top: `var(--pos-${pos}-t)`,
+        left: `var(--pos-${pos}-l)`,
+        width: `var(--pos-${pos}-w)`,
+        height: `var(--pos-${pos}-h)`,
+      } as React.CSSProperties}
     >
       <div className={`flex flex-col h-full relative z-10 transition-all duration-700 ${isMain ? 'items-start' : 'items-center justify-center'}`}>
-        <div className={`shrink-0 flex items-center justify-center bg-bgSoft rounded-full shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-primary/10 ${colorClass} ${isMain ? 'w-16 h-16 mb-6' : 'w-12 h-12'}`}>
-          <Icon size={isMain ? 32 : 24} />
+        <div className={`shrink-0 flex items-center justify-center bg-bgSoft rounded-full shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-primary/10 ${colorClass} ${isMain ? 'w-14 h-14 md:w-16 md:h-16 mb-4 md:mb-6' : 'w-10 h-10 md:w-12 md:h-12'}`}>
+          <Icon size={isMain ? 28 : 20} className="md:w-auto md:h-auto" />
         </div>
 
         <div className={`flex flex-col gap-1 transition-all duration-700 ${isMain ? 'text-left' : 'text-center'}`}>
-          <h4 className={`font-black group-hover:text-primary transition-all tracking-tight leading-tight duration-500 ${isMain ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-sm md:text-base'}`}>
+          <h4 className={`font-black group-hover:text-primary transition-all tracking-tight leading-tight duration-500 ${isMain ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl' : 'text-xs sm:text-sm md:text-base'}`}>
             {title}
           </h4>
 
           <div className={`overflow-hidden transition-all duration-700 ease-in-out ${isMain ? 'max-h-40 opacity-60 mt-2' : 'max-h-0 opacity-0'}`}>
-            <p className="text-base md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed max-w-sm">
+            <p className="text-sm md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed max-w-sm">
               {desc}
             </p>
           </div>
@@ -286,33 +276,34 @@ const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </nav>
 
-      <section className="relative pt-16 sm:pt-24 pb-12 px-6 text-center reveal">        <div className="max-w-4xl mx-auto space-y-12 flex flex-col items-center">
-        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-700">
-          <div className="group-hover/icon:scale-110 transition-transform duration-500"><KotoriIcon size={100} /></div>
-        </div>
+      <section className="relative pt-16 sm:pt-24 pb-12 px-6 text-center reveal">
+        <div className="max-w-4xl mx-auto space-y-12 flex flex-col items-center">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-700">
+            <div className="group-hover/icon:scale-110 transition-transform duration-500"><KotoriIcon size={100} /></div>
+          </div>
 
-        <div className="space-y-6">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-charcoal leading-tight tracking-tight">
-            Click any word. <br />
-            <span className="relative inline-block group/reveal cursor-default">
-              <span className="relative z-10 text-primary italic transition-colors duration-500">
-                Learn effortlessly. For free.
+          <div className="space-y-6">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-charcoal leading-tight tracking-tight">
+              Click any word. <br />
+              <span className="relative inline-block group/reveal cursor-default">
+                <span className="relative z-10 text-primary italic transition-colors duration-500">
+                  Learn effortlessly. For free.
+                </span>
+                <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
               </span>
-              <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
-            </span>
-          </h1>
-          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Stop the tab-switching madness. Reading shouldn't feel like a chore. Just click the word you don't know and keep moving. We’ll handle the rest.</p>
-        </div>
+            </h1>
+            <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Stop the tab-switching madness. Reading shouldn't feel like a chore. Just click the word you don't know and keep moving. We’ll handle the rest.</p>
+          </div>
 
-        <button
-          ref={heroButtonRef}
-          type="button"
-          onClick={() => scrollToSection('workflow')}
-          className="group px-10 sm:px-14 py-5 sm:py-6 bg-primary text-white rounded-full text-lg sm:text-xl font-bold shadow-2xl shadow-primary/30 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-4"
-        >
-          See How It Works <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
-        </button>
-      </div>
+          <button
+            ref={heroButtonRef}
+            type="button"
+            onClick={() => scrollToSection('workflow')}
+            className="group px-10 sm:px-14 py-5 sm:py-6 bg-primary text-white rounded-full text-lg sm:text-xl font-bold shadow-2xl shadow-primary/30 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-4"
+          >
+            See How It Works <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
       </section>
 
       <section id="workflow" className="py-20 px-6 bg-card/50 reveal scroll-mt-20">
@@ -367,7 +358,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <p className="text-charcoal opacity-50 font-medium text-base sm:text-lg max-w-xl mx-auto pt-4 italic">The building blocks of Fluency.</p>
           </div>
 
-          <div className="relative w-full max-w-5xl mx-auto h-[600px] md:h-[550px]">
+          <div className="relative w-full max-w-5xl mx-auto h-[550px] md:h-[600px]">
             <div className="bento-container w-full h-full relative">
               {FEATURES.map((feature, idx) => (
                 <BentoCard
@@ -493,43 +484,26 @@ const LandingPage: React.FC<LandingPageProps> = ({
       </footer>
 
       <style>{`
-        /* Bento Morphing Container */
-        .bento-container {
-          perspective: 1000px;
+        /* Bento Morphing Variables */
+        :root {
+          --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 65%; --pos-main-h: 65%;
+          --pos-vert-t: 0%; --pos-vert-l: 67%; --pos-vert-w: 33%; --pos-vert-h: 65%;
+          --pos-wide-t: 67%; --pos-wide-l: 0%; --pos-wide-w: 65%; --pos-wide-h: 33%;
+          --pos-small-t: 67%; --pos-small-l: 67%; --pos-small-w: 33%; --pos-small-h: 33%;
         }
 
         @media (max-width: 768px) {
-          .bento-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            height: auto !important;
+          :root {
+            /* Responsive Bento Layout */
+            --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 100%; --pos-main-h: 45%;
+            --pos-vert-t: 47%; --pos-vert-l: 0%; --pos-vert-w: 48%; --pos-vert-h: 24%;
+            --pos-small-t: 47%; --pos-small-l: 52%; --pos-small-w: 48%; --pos-small-h: 24%;
+            --pos-wide-t: 73%; --pos-wide-l: 0%; --pos-wide-w: 100%; --pos-wide-h: 27%;
           }
-          .bento-container > div {
-            position: relative !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: auto !important;
-            min-height: 120px;
-          }
-          .bento-container h4 {
-            font-size: 1.25rem !important;
-          }
-          .bento-container p {
-            max-height: 100px !important;
-            opacity: 0.6 !important;
-            margin-top: 0.5rem !important;
-          }
-          .bento-container .flex-col {
-            align-items: flex-start !important;
-            text-align: left !important;
-          }
-          .bento-container .w-16, .bento-container .w-12 {
-            width: 3rem !important;
-            height: 3rem !important;
-            margin-bottom: 1rem !important;
-          }
+        }
+
+        .bento-container {
+          perspective: 1000px;
         }
 
         .pencil-stroke {
