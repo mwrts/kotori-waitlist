@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  ChevronRight, 
-  Zap, 
+import {
+  ChevronRight,
+  Zap,
   CloudSun,
   Flower,
   Trees,
@@ -34,10 +34,10 @@ interface LandingPageProps {
 }
 
 const FeatherParticle = ({ delay = 0, x = 0, top = 0 }) => (
-  <div 
+  <div
     className="absolute pointer-events-none opacity-[0.05] animate-feather-drift"
-    style={{ 
-      left: `${x}%`, 
+    style={{
+      left: `${x}%`,
       top: `${top}%`,
       animationDelay: `${delay}s`,
     }}
@@ -59,39 +59,51 @@ const FEATURES = [
   { id: 'f4', icon: Cpu, title: "Optimized for Efficiency", desc: "Lightweight architecture built for speed. Kotori responds instantly, even on older devices.", colorClass: "text-purple-400" }
 ];
 
-const BentoCard = React.memo(({ 
+// Define Slot configurations for Desktop morphing
+const BENTO_SLOTS: Record<BentoPos, { top: string; left: string; width: string; height: string }> = {
+  main: { top: '0%', left: '0%', width: '65%', height: '65%' },
+  vert: { top: '0%', left: '67%', width: '33%', height: '65%' },
+  wide: { top: '67%', left: '0%', width: '65%', height: '33%' },
+  small: { top: '67%', left: '67%', width: '33%', height: '33%' }
+};
+
+const BentoCard = React.memo(({
   feature,
   pos,
-}: { 
+}: {
   feature: typeof FEATURES[0],
   pos: BentoPos,
 }) => {
   const isMain = pos === 'main';
   const { icon: Icon, title, desc, colorClass } = feature;
-  
+  const slot = BENTO_SLOTS[pos];
 
   return (
-    <div 
-      className={`group relative bg-card p-6 md:p-8 rounded-[3rem] border transition-all duration-600 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.02] overflow-hidden flex flex-col justify-center border-primary/10 bento-area-${pos} ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
+    <div
+      className={`absolute group bg-card p-6 md:p-8 rounded-[3rem] border transition-all duration-700 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
       style={{
-        transitionProperty: 'grid-area, transform, background-color, border-color, box-shadow, opacity, ring'
+        top: slot.top,
+        left: slot.left,
+        width: slot.width,
+        height: slot.height,
+        // Responsive override for mobile handled via CSS class and media query below
       }}
     >
-      <div className={`flex ${isMain ? 'flex-col items-start' : 'flex-row items-center gap-4'} h-full relative z-10`}>
-        <div className={`shrink-0 w-12 h-12 md:w-16 md:h-16 bg-bgSoft rounded-full flex items-center justify-center ${isMain ? 'mb-6' : ''} shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-primary/10 ${colorClass}`}>
+      <div className={`flex flex-col h-full relative z-10 transition-all duration-700 ${isMain ? 'items-start' : 'items-center justify-center'}`}>
+        <div className={`shrink-0 flex items-center justify-center bg-bgSoft rounded-full shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-primary/10 ${colorClass} ${isMain ? 'w-16 h-16 mb-6' : 'w-12 h-12'}`}>
           <Icon size={isMain ? 32 : 24} />
         </div>
-        
-        <div className="flex flex-col gap-1">
-          <h4 className={`font-black group-hover:text-primary transition-all tracking-tight leading-tight duration-500 ${isMain ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg'}`}>
+
+        <div className={`flex flex-col gap-1 transition-all duration-700 ${isMain ? 'text-left' : 'text-center'}`}>
+          <h4 className={`font-black group-hover:text-primary transition-all tracking-tight leading-tight duration-500 ${isMain ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-sm md:text-base'}`}>
             {title}
           </h4>
-          
-          {isMain && (
-            <p className="text-base md:text-lg opacity-60 leading-relaxed font-medium group-hover:opacity-80 transition-all animate-in fade-in slide-in-from-bottom-2 duration-700 mt-2 max-w-sm">
+
+          <div className={`overflow-hidden transition-all duration-700 ease-in-out ${isMain ? 'max-h-40 opacity-60 mt-2' : 'max-h-0 opacity-0'}`}>
+            <p className="text-base md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed max-w-sm">
               {desc}
             </p>
-          )}
+          </div>
         </div>
       </div>
     </div>
@@ -102,15 +114,14 @@ BentoCard.displayName = 'BentoCard';
 
 const FAQItem = React.memo(({ q, a, index }: { q: string, a: string, index: number }) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
-    <div 
-      className={`group bg-card border-2 transition-all duration-500 rounded-[2rem] overflow-hidden ${
-        isOpen ? 'border-primary/30 shadow-xl translate-y-[-4px]' : 'border-primary/5 hover:border-primary/10 shadow-sm'
-      }`}
+    <div
+      className={`group bg-card border-2 transition-all duration-500 rounded-[2rem] overflow-hidden ${isOpen ? 'border-primary/30 shadow-xl translate-y-[-4px]' : 'border-primary/5 hover:border-primary/10 shadow-sm'
+        }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left p-6 sm:p-8 flex items-center justify-between gap-4"
       >
@@ -135,11 +146,11 @@ const FAQItem = React.memo(({ q, a, index }: { q: string, a: string, index: numb
 
 FAQItem.displayName = 'FAQItem';
 
-const LandingPage: React.FC<LandingPageProps> = ({ 
-  theme, 
+const LandingPage: React.FC<LandingPageProps> = ({
+  theme,
   setTheme,
   isDarkMode,
-  setIsDarkMode 
+  setIsDarkMode
 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [demoWord, setDemoWord] = useState<string | null>(null);
@@ -148,14 +159,15 @@ const LandingPage: React.FC<LandingPageProps> = ({
   const [isUnderlineVisible, setIsUnderlineVisible] = useState(false);
   const [isScribbleVisible, setIsScribbleVisible] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
-  
-  const [slotMap, setSlotMap] = useState<number[]>([0, 1, 2, 3]);
-  
+
+  // slotMap[featureIndex] = posKey
+  const [slotMap, setSlotMap] = useState<BentoPos[]>(['main', 'vert', 'wide', 'small']);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const heroButtonRef = useRef<HTMLButtonElement>(null);
   const underlineTriggerRef = useRef<HTMLSpanElement>(null);
   const scribbleTriggerRef = useRef<HTMLHeadingElement>(null);
-  
+
   const hintConsumed = useRef(sessionStorage.getItem('kotori_hint_consumed') === 'true');
 
   useEffect(() => {
@@ -225,20 +237,26 @@ const LandingPage: React.FC<LandingPageProps> = ({
     }));
   };
 
+  // Cycle following diagram: Main -> Wide -> Small -> Vert -> Main
   const rotateSlots = () => {
     setSlotMap(prev => {
-      const [fMain, fVert, fWide, fSmall] = prev;
-      return [fVert, fSmall, fMain, fWide];
+      const next = [...prev];
+      const mappings: Record<BentoPos, BentoPos> = {
+        'main': 'wide',
+        'wide': 'small',
+        'small': 'vert',
+        'vert': 'main'
+      };
+      return next.map(pos => mappings[pos]);
     });
   };
 
   const currentDemo = DEMO_SENTENCES[activeTab];
-  const posKeys: BentoPos[] = ['main', 'vert', 'wide', 'small'];
 
   return (
     <div ref={containerRef} className="h-screen w-full bg-bgSoft text-charcoal overflow-y-auto overflow-x-hidden scroll-smooth relative transition-colors duration-700">
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-      
+
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden min-h-[400%]">
         <FeatherParticle x={10} top={2} delay={0} />
         <FeatherParticle x={40} top={12} delay={5} />
@@ -255,47 +273,46 @@ const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex bg-primary/10 rounded-full p-1 border border-primary/20 items-center">
               <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full transition-all bg-card text-primary shadow-sm hover:scale-110 active:scale-95">
-                {isDarkMode ? <Sun size={14}/> : <Moon size={14}/>}
+                {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
               </button>
               <div className="w-[1px] h-4 bg-primary/20 mx-2" />
               <div className="flex gap-0.5">
-                <button onClick={() => setTheme('morning')} className={`p-2 rounded-full transition-all ${theme === 'morning' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><CloudSun size={14}/></button>
-                <button onClick={() => setTheme('sakura')} className={`p-2 rounded-full transition-all ${theme === 'sakura' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Flower size={14}/></button>
-                <button onClick={() => setTheme('forest')} className={`p-2 rounded-full transition-all ${theme === 'forest' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Trees size={14}/></button>
+                <button onClick={() => setTheme('morning')} className={`p-2 rounded-full transition-all ${theme === 'morning' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><CloudSun size={14} /></button>
+                <button onClick={() => setTheme('sakura')} className={`p-2 rounded-full transition-all ${theme === 'sakura' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Flower size={14} /></button>
+                <button onClick={() => setTheme('forest')} className={`p-2 rounded-full transition-all ${theme === 'forest' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Trees size={14} /></button>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <section className="relative pt-24 sm:pt-40 pb-20 px-6 text-center reveal">
-        <div className="max-w-4xl mx-auto space-y-12 flex flex-col items-center">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-700">
-             <div className="group-hover/icon:scale-110 transition-transform duration-500"><KotoriIcon size={100} /></div>
-          </div>
-          
-          <div className="space-y-6">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-charcoal leading-tight tracking-tight">
-              Click any word. <br/>
-              <span className="relative inline-block group/reveal cursor-default">
-                <span className="relative z-10 text-primary italic transition-colors duration-500">
-                  Learn effortlessly. For free.
-                </span>
-                <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
-              </span>
-            </h1>
-            <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Stop the tab-switching madness. Reading shouldn't feel like a chore. Just click the word you don't know and keep moving. We’ll handle the rest.</p>
-          </div>
-
-          <button 
-            ref={heroButtonRef}
-            type="button" 
-            onClick={() => scrollToSection('workflow')} 
-            className="group px-10 sm:px-14 py-5 sm:py-6 bg-primary text-white rounded-full text-lg sm:text-xl font-bold shadow-2xl shadow-primary/30 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-4"
-          >
-            See How It Works <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+      <section className="relative pt-16 sm:pt-24 pb-12 px-6 text-center reveal">        <div className="max-w-4xl mx-auto space-y-12 flex flex-col items-center">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-700">
+          <div className="group-hover/icon:scale-110 transition-transform duration-500"><KotoriIcon size={100} /></div>
         </div>
+
+        <div className="space-y-6">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-charcoal leading-tight tracking-tight">
+            Click any word. <br />
+            <span className="relative inline-block group/reveal cursor-default">
+              <span className="relative z-10 text-primary italic transition-colors duration-500">
+                Learn effortlessly. For free.
+              </span>
+              <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
+            </span>
+          </h1>
+          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Stop the tab-switching madness. Reading shouldn't feel like a chore. Just click the word you don't know and keep moving. We’ll handle the rest.</p>
+        </div>
+
+        <button
+          ref={heroButtonRef}
+          type="button"
+          onClick={() => scrollToSection('workflow')}
+          className="group px-10 sm:px-14 py-5 sm:py-6 bg-primary text-white rounded-full text-lg sm:text-xl font-bold shadow-2xl shadow-primary/30 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-4"
+        >
+          See How It Works <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
       </section>
 
       <section id="workflow" className="py-20 px-6 bg-card/50 reveal scroll-mt-20">
@@ -305,20 +322,20 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <div className="bg-red-900/10 p-8 md:p-10 rounded-[3rem] border border-red-500/20 text-left transition-transform hover:scale-[1.01] hover:shadow-xl duration-500">
               <h3 className="text-lg font-black mb-6 flex items-center gap-2 text-red-500"><AlertCircle size={20} /> Traditional Workflow</h3>
               <div className="space-y-5 opacity-80">
-                {[ "See unknown word", "Copy it manually", "Switch to Translate tab", "Paste and wait for result", "Switch back... wait, where was I?" ].map((t, i) => (
+                {["See unknown word", "Copy it manually", "Switch to Translate tab", "Paste and wait for result", "Switch back... wait, where was I?"].map((t, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <span className="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-[9px] font-black shrink-0">{i+1}</span> 
+                    <span className="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-[9px] font-black shrink-0">{i + 1}</span>
                     <p className="font-bold text-sm sm:text-base text-charcoal">{t}</p>
                   </div>
                 ))}
               </div>
             </div>
             <div className="bg-primary/10 p-8 md:p-10 rounded-[3rem] border-2 border-primary/20 shadow-xl text-left relative overflow-hidden transition-transform hover:scale-[1.01] hover:shadow-2xl duration-500">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
               <h3 className="text-lg font-black mb-6 flex items-center gap-2 text-primary"><KotoriIcon size={20} /> Kotori Workflow</h3>
               <div className="space-y-8 relative z-10">
-                {[ "Click unknown word", "See meaning + example instantly", "Keep reading naturally" ].map((t, i) => (
-                  <div key={i} className="flex items-start gap-4"><span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-black shrink-0 shadow-lg shadow-primary/20">{i+1}</span> <p className="font-bold text-base sm:text-lg">{t}</p></div>
+                {["Click unknown word", "See meaning + example instantly", "Keep reading naturally"].map((t, i) => (
+                  <div key={i} className="flex items-start gap-4"><span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-black shrink-0 shadow-lg shadow-primary/20">{i + 1}</span> <p className="font-bold text-base sm:text-lg">{t}</p></div>
                 ))}
               </div>
             </div>
@@ -330,40 +347,40 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-6xl mx-auto flex flex-col items-center">
           <div className="text-center mb-12 space-y-3">
             <h3 ref={scribbleTriggerRef} className="text-3xl md:text-5xl font-black tracking-tight leading-tight relative z-10">
-              Simple. Focused. <br className="sm:hidden"/> 
+              Simple. Focused. <br className="sm:hidden" />
               <span className="relative inline-block">
                 Perfect.
                 <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[180%] pointer-events-none overflow-visible -z-10 transform rotate-3" viewBox="0 0 140 100" preserveAspectRatio="none">
-                  <path 
-                    d="M 15,45 C 15,5 115,5 115,45 C 115,85 15,85 15,45 C 15,15 125,15 125,50 C 125,85 5,85 5,50" 
-                    fill="none" 
-                    stroke="var(--primary)" 
-                    strokeWidth="3.2" 
-                    strokeLinecap="round" 
+                  <path
+                    d="M 15,45 C 15,5 115,5 115,45 C 115,85 15,85 15,45 C 15,15 125,15 125,50 C 125,85 5,85 5,50"
+                    fill="none"
+                    stroke="var(--primary)"
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
                     strokeLinejoin="round"
                     className={`scribble-stroke ${isScribbleVisible ? 'draw-scribble' : ''}`}
-                    opacity="0."
+                    opacity="0.6"
                   />
                 </svg>
               </span>
             </h3>
             <p className="text-charcoal opacity-50 font-medium text-base sm:text-lg max-w-xl mx-auto pt-4 italic">The building blocks of Fluency.</p>
           </div>
-          
-          <div className="relative w-full max-w-5xl mx-auto">
-            <div className="bento-grid gap-4 md:gap-6 h-[700px] md:h-[550px] w-full">
-              {slotMap.map((featureIdx, slotIdx) => (
-                <BentoCard 
-                  key={`${FEATURES[featureIdx].id}-${slotIdx}`}
-                  feature={FEATURES[featureIdx]}
-                  pos={posKeys[slotIdx]}
+
+          <div className="relative w-full max-w-5xl mx-auto h-[600px] md:h-[550px]">
+            <div className="bento-container w-full h-full relative">
+              {FEATURES.map((feature, idx) => (
+                <BentoCard
+                  key={feature.id}
+                  feature={feature}
+                  pos={slotMap[idx]}
                 />
               ))}
             </div>
-            
-            <button 
+
+            <button
               onClick={rotateSlots}
-              className="absolute bottom-4 right-4 md:bottom-[34%] md:right-[31%] z-20 w-14 h-14 md:w-16 md:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group border-4 border-card"
+              className="absolute bottom-4 right-4 md:bottom-[33%] md:right-[31%] z-30 w-14 h-14 md:w-16 md:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group border-4 border-card"
               aria-label="Cycle Features"
             >
               <RefreshCw size={28} className="group-hover:rotate-180 transition-transform duration-700" />
@@ -376,7 +393,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16">
           <div className="space-y-6 text-center lg:text-left max-w-xl">
             <h2 className="creative-title text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-              Context is <br className="sm:hidden"/>
+              Context is <br className="sm:hidden" />
               <span ref={underlineTriggerRef} className="text-primary relative inline-block whitespace-nowrap">
                 everything.
                 <svg className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-3 sm:h-4 pointer-events-none overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -413,25 +430,25 @@ const LandingPage: React.FC<LandingPageProps> = ({
                   })}
                 </div>
                 <div className={`absolute inset-x-3 bottom-3 z-10 transition-all duration-700 transform ${demoWord ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
-                   <div className="bg-card border-2 border-primary/30 rounded-[2rem] p-4 shadow-2xl relative overflow-hidden backdrop-blur-xl max-h-[260px] overflow-y-auto scrollbar-hide">
-                      <button type="button" onClick={() => setDemoWord(null)} className="absolute top-3 right-3 p-1 opacity-30 hover:opacity-100 transition-all hover:scale-110"><X size={16} /></button>
-                      {demoWord && (
-                        <div className="animate-in fade-in zoom-in-95 duration-500">
-                          <div className="flex items-baseline justify-between mb-2">
-                            <h3 className="text-xl font-black text-primary tracking-tight">{demoWord}</h3>
-                            <span className="text-[11px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-md uppercase tracking-widest">{currentDemo.tokens.find(w => w.text === demoWord)?.rom}</span>
-                          </div>
-                          <div className="space-y-3">
-                            <p className="text-base font-bold text-charcoal leading-tight">{currentDemo.tokens.find(w => w.text === demoWord)?.trans}</p>
-                            <div className="bg-primary/5 rounded-xl p-3 italic text-[10px] leading-relaxed opacity-80 border border-primary/5">"{currentDemo.tokens.find(w => w.text === demoWord)?.ex}"</div>
-                            <div className="flex gap-2">
-                              <button onClick={(e) => { e.stopPropagation(); setStatus(demoWord, WordStatus.LEARNING); }} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl font-black text-[8px] uppercase tracking-widest transition-all ${demoWordStatuses[demoWord] === WordStatus.LEARNING ? 'bg-accent text-gray-900 shadow-lg' : 'bg-bgSoft opacity-60 border border-primary/10 hover:opacity-100'}`}><Bookmark size={14} fill={demoWordStatuses[demoWord] === WordStatus.LEARNING ? "currentColor" : "none"} />Learning</button>
-                              <button onClick={(e) => { e.stopPropagation(); setStatus(demoWord, WordStatus.LEARNED); }} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl font-black text-[8px] uppercase tracking-widest transition-all ${demoWordStatuses[demoWord] === WordStatus.LEARNED ? 'bg-secondary text-white shadow-lg' : 'bg-bgSoft opacity-60 border border-primary/10 hover:opacity-100'}`}><Bird size={14} fill={demoWordStatuses[demoWord] === WordStatus.LEARNED ? "white" : "none"} />Mastered</button>
-                            </div>
+                  <div className="bg-card border-2 border-primary/30 rounded-[2rem] p-4 shadow-2xl relative overflow-hidden backdrop-blur-xl max-h-[260px] overflow-y-auto scrollbar-hide">
+                    <button type="button" onClick={() => setDemoWord(null)} className="absolute top-3 right-3 p-1 opacity-30 hover:opacity-100 transition-all hover:scale-110"><X size={16} /></button>
+                    {demoWord && (
+                      <div className="animate-in fade-in zoom-in-95 duration-500">
+                        <div className="flex items-baseline justify-between mb-2">
+                          <h3 className="text-xl font-black text-primary tracking-tight">{demoWord}</h3>
+                          <span className="text-[11px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-md uppercase tracking-widest">{currentDemo.tokens.find(w => w.text === demoWord)?.rom}</span>
+                        </div>
+                        <div className="space-y-3">
+                          <p className="text-base font-bold text-charcoal leading-tight">{currentDemo.tokens.find(w => w.text === demoWord)?.trans}</p>
+                          <div className="bg-primary/5 rounded-xl p-3 italic text-[10px] leading-relaxed opacity-80 border border-primary/5">"{currentDemo.tokens.find(w => w.text === demoWord)?.ex}"</div>
+                          <div className="flex gap-2">
+                            <button onClick={(e) => { e.stopPropagation(); setStatus(demoWord, WordStatus.LEARNING); }} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl font-black text-[8px] uppercase tracking-widest transition-all ${demoWordStatuses[demoWord] === WordStatus.LEARNING ? 'bg-accent text-gray-900 shadow-lg' : 'bg-bgSoft opacity-60 border border-primary/10 hover:opacity-100'}`}><Bookmark size={14} fill={demoWordStatuses[demoWord] === WordStatus.LEARNING ? "currentColor" : "none"} />Learning</button>
+                            <button onClick={(e) => { e.stopPropagation(); setStatus(demoWord, WordStatus.LEARNED); }} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl font-black text-[8px] uppercase tracking-widest transition-all ${demoWordStatuses[demoWord] === WordStatus.LEARNED ? 'bg-secondary text-white shadow-lg' : 'bg-bgSoft opacity-60 border border-primary/10 hover:opacity-100'}`}><Bird size={14} fill={demoWordStatuses[demoWord] === WordStatus.LEARNED ? "white" : "none"} />Mastered</button>
                           </div>
                         </div>
-                      )}
-                   </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -476,26 +493,42 @@ const LandingPage: React.FC<LandingPageProps> = ({
       </footer>
 
       <style>{`
-        .bento-grid {
-          display: grid;
-          grid-template-areas: 
-            "main main vert"
-            "main main vert"
-            "wide wide small";
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: repeat(3, 1fr);
-          transition: all 0.6s ease-out;
+        /* Bento Morphing Container */
+        .bento-container {
+          perspective: 1000px;
         }
-        .bento-area-main { grid-area: main; }
-        .bento-area-vert { grid-area: vert; }
-        .bento-area-wide { grid-area: wide; }
-        .bento-area-small { grid-area: small; }
 
         @media (max-width: 768px) {
-          .bento-grid {
+          .bento-container {
             display: flex;
             flex-direction: column;
+            gap: 1.5rem;
             height: auto !important;
+          }
+          .bento-container > div {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 120px;
+          }
+          .bento-container h4 {
+            font-size: 1.25rem !important;
+          }
+          .bento-container p {
+            max-height: 100px !important;
+            opacity: 0.6 !important;
+            margin-top: 0.5rem !important;
+          }
+          .bento-container .flex-col {
+            align-items: flex-start !important;
+            text-align: left !important;
+          }
+          .bento-container .w-16, .bento-container .w-12 {
+            width: 3rem !important;
+            height: 3rem !important;
+            margin-bottom: 1rem !important;
           }
         }
 
@@ -509,7 +542,6 @@ const LandingPage: React.FC<LandingPageProps> = ({
           stroke-dasharray: 1400;
           stroke-dashoffset: 1400;
           transition: stroke-dashoffset 4.5s cubic-bezier(0.45, 0, 0.55, 1);
-          transition-delay: s;
         }
         .scribble-stroke.draw-scribble { stroke-dashoffset: 0; }
         .scrollbar-hide::-webkit-scrollbar { display: none; } 
