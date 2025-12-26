@@ -1,0 +1,29 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="60" cy="110" rx="25" ry="4" fill="#3D3D3D" fill-opacity="0.08" />
+  <g>
+    <path d="M48 102C48 106 46 108 42 108M48 102C48 106 51 108 54 108" stroke="#3D3D3D" stroke-width="1.8" stroke-linecap="round" />
+    <path d="M72 102C72 106 70 108 66 108M72 102C72 106 75 108 78 108" stroke="#3D3D3D" stroke-width="1.8" stroke-linecap="round" />
+    <path d="M26 68C18 68 18 82 26 82" stroke="#3D3D3D" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M94 68C102 68 102 82 94 82" stroke="#3D3D3D" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="60" cy="72" r="40" fill="#5D8A7E" stroke="#3D3D3D" stroke-width="2.5" />
+    <circle cx="60" cy="84" r="26" fill="white" fill-opacity="0.25" />
+    <ellipse cx="38" cy="74" rx="6" ry="3" fill="#FF80AB" fill-opacity="0.4" />
+    <ellipse cx="82" cy="74" rx="6" ry="3" fill="#FF80AB" fill-opacity="0.4" />
+    <g>
+      <circle cx="44" cy="62" r="10" fill="white" stroke="#3D3D3D" stroke-width="2" />
+      <circle cx="44" cy="62" r="5" fill="#3D3D3D" />
+      <circle cx="46" cy="60" r="1.8" fill="white" />
+      <circle cx="76" cy="62" r="10" fill="white" stroke="#3D3D3D" stroke-width="2" />
+      <circle cx="76" cy="62" r="5" fill="#3D3D3D" />
+      <circle cx="78" cy="60" r="1.8" fill="white" />
+    </g>
+    <path d="M54 74C54 70 66 70 66 74C66 81 60 85 60 85C60 85 54 81 54 74Z" fill="#FFA726" stroke="#3D3D3D" stroke-width="2" stroke-linejoin="round" />
+    <g transform="rotate(-4, 60, 35)">
+      <path d="M28 45C28 28 40 18 60 18C80 18 92 28 92 45H28Z" fill="#EE423E" stroke="#3D3D3D" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M82 40C82 40 104 40 110 48C104 54 82 54 82 46" fill="#EE423E" stroke="#3D3D3D" stroke-width="2.5" stroke-linejoin="round" />
+      <circle cx="60" cy="18" r="4.5" fill="#3D3D3D" />
+      <circle cx="60" cy="18" r="2.5" fill="#EE423E" />
+      <path d="M60 18V45" stroke="#3D3D3D" stroke-width="1.5" stroke-opacity="0.15" />
+    </g>
+  </g>
+</svg>
