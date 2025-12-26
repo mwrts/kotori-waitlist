@@ -331,8 +331,8 @@ const LandingPage: React.FC<LandingPageProps> = ({
           <div className="text-center mb-12 space-y-3">
             <h3 ref={scribbleTriggerRef} className="text-3xl md:text-5xl font-black tracking-tight leading-tight relative z-10">
               Simple. Focused. <br className="sm:hidden"/> 
-              <span className="relative inline-block px-4">
-                Playful.
+              <span className="relative inline-block">
+                Perfect.
                 <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[180%] pointer-events-none overflow-visible -z-10 transform rotate-3" viewBox="0 0 140 100" preserveAspectRatio="none">
                   <path 
                     d="M 15,45 C 15,5 115,5 115,45 C 115,85 15,85 15,45 C 15,15 125,15 125,50 C 125,85 5,85 5,50" 
@@ -342,7 +342,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
                     strokeLinecap="round" 
                     strokeLinejoin="round"
                     className={`scribble-stroke ${isScribbleVisible ? 'draw-scribble' : ''}`}
-                    opacity="0.3"
+                    opacity="0."
                   />
                 </svg>
               </span>
@@ -509,7 +509,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
           stroke-dasharray: 1400;
           stroke-dashoffset: 1400;
           transition: stroke-dashoffset 4.5s cubic-bezier(0.45, 0, 0.55, 1);
-          transition-delay: 1s;
+          transition-delay: s;
         }
         .scribble-stroke.draw-scribble { stroke-dashoffset: 0; }
         .scrollbar-hide::-webkit-scrollbar { display: none; } 

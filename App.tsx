@@ -20,7 +20,7 @@ const THEME_CONFIG = {
 };
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<ThemeType>(() => (localStorage.getItem('kotori_theme') as ThemeType) || 'forest');
+  const [theme, setTheme] = useState<ThemeType>(() => (localStorage.getItem('kotori_theme') as ThemeType) || 'morning');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('kotori_dark_mode') === 'true');
 
   useEffect(() => {
