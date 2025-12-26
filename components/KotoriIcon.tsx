@@ -94,8 +94,8 @@ const KotoriIcon: React.FC<KotoriIconProps> = ({
           />
 
           {/* Blush - For the extra cute factor */}
-          <ellipse cx="38" cy="74" rx="6" ry="3" fill="#FF80AB" fillOpacity="0.4" />
-          <ellipse cx="82" cy="74" rx="6" ry="3" fill="#FF80AB" fillOpacity="0.4" />
+          <ellipse cx="38" cy="74" rx="6" ry="3" fill="#FF80AB" fillOpacity="0.2" />
+          <ellipse cx="82" cy="74" rx="6" ry="3" fill="#FF80AB" fillOpacity="0.2" />
           
           {/* Eyes - Small and Twinkly */}
           <g>

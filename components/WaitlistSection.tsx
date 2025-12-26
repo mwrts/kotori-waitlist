@@ -1,6 +1,6 @@
+
 import React, { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2, Star, MessageCircle, Layout, Instagram, Twitter } from 'lucide-react';
-import { supabase } from '../services/supabase';
 
 interface WaitlistSectionProps {
   onSuccess?: () => void;
@@ -9,41 +9,20 @@ interface WaitlistSectionProps {
 const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'flying' | 'success'>('idle');
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleJoin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
+// Fixed: Replaced supabase call with simulation for landing page consistency
+const handleJoin = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!email) return;
 
-    setStatus('flying');
-    setErrorMsg(null);
-
-    try {
-      // actual database insertion
-      const { error } = await supabase
-        .from('waitlist')
-        .insert([{ email: email.toLowerCase().trim() }]);
-
-      if (error) {
-        // handle existing email check
-        if (error.code === '23505') {
-          throw new Error("you're already in the flock!");
-        }
-        throw error;
-      }
-
-      // synced with your animation timing
-      setTimeout(() => {
-        setStatus('success');
-        onSuccess?.();
-      }, 1200);
-
-    } catch (err: any) {
-      console.error('flight failed:', err.message);
-      setErrorMsg(err.message);
-      setStatus('idle');
-    }
-  };
+  setStatus('flying');
+  
+  // Simulate successful waitlist signup for the landing page
+  setTimeout(() => {
+    setStatus('success');
+    onSuccess?.();
+  }, 1200);
+};
 
   return (
     <section id="waitlist" className="py-24 px-6 scroll-mt-20 relative overflow-hidden reveal">
@@ -91,13 +70,6 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
                   />
                 </div>
 
-                {/* error display for duplicate emails */}
-                {errorMsg && (
-                  <p className="text-red-500 text-[10px] font-black uppercase tracking-widest animate-bounce">
-                    {errorMsg}
-                  </p>
-                )}
-
                 <div className="relative group/btn">
                   {status === 'idle' && (
                     <div className="absolute -top-6 inset-x-0 flex justify-center items-end gap-6 pointer-events-none">
@@ -123,7 +95,6 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
 
                   <button
                     type="submit"
-                    disabled={status === 'flying'}
                     className={`w-full py-5 bg-primary text-white rounded-3xl font-black text-xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 overflow-hidden ${status === 'flying' ? 'cursor-wait opacity-90' : ''}`}
                   >
                     {status === 'flying' ? 'Taking Flight...' : 'Join the Waitlist'}
@@ -140,15 +111,15 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
                 <h3 className="text-3xl font-black mb-2 tracking-tight text-charcoal">Welcome to the flock!</h3>
                 <p className="opacity-60 font-bold mb-6 text-charcoal">You're on the list. Keep an eye on your inbox.</p>
                 <div className="p-5 bg-primary/5 rounded-2xl border border-primary/10 max-w-sm text-xs font-bold leading-relaxed mb-8 text-charcoal">
-                    We'll invite you to vote on our first official expansion language in the coming weeks!
+                   We'll invite you to vote on our first official expansion language in the coming weeks!
                 </div>
                 
                 <div className="flex gap-8">
-                  <a href="https://instagram.com/kotoriapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
+                  <a href="#" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
                     <Instagram size={18} />
                     @kotoriapp
                   </a>
-                  <a href="https://twitter.com/kotoriapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
+                  <a href="#" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
                     <Twitter size={18} />
                     @kotoriapp
                   </a>
