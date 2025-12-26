@@ -54,7 +54,7 @@ type BentoPos = 'main' | 'vert' | 'wide' | 'small';
 
 const FEATURES = [
   { id: 'f1', icon: Zap, title: "Instant Definitions", desc: "No more searching. One click gives you translation, pronunciation, and example sentences instantly.", colorClass: "text-orange-400" },
-  { id: 'f2', icon: Clipboard, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Context-aware AI handles the translation.", colorClass: "text-blue-400" },
+  { id: 'f2', icon: Clipboard, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Kotori handles the translation and everything else.", colorClass: "text-blue-400" },
   { id: 'f3', icon: Trophy, title: "Progress Tracking", desc: "Save words you're learning. We track your frequency and mastery so you never forget.", colorClass: "text-green-400" },
   { id: 'f4', icon: Cpu, title: "Optimized for Efficiency", desc: "Lightweight architecture built for speed. Kotori responds instantly, even on older devices.", colorClass: "text-purple-400" }
 ];
