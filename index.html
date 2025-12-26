@@ -1,107 +1,127 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Kotori - Language Learning Assistant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" /> <style>
-      :root {
-        --primary: #4A90E2;
-        --secondary: #6FCF97; /* Green for Learned */
-        --accent: #FFD700;    /* Yellow for Learning */
-        --bg: #F8FAFB;
-        --text: #2C3E50;
-        --card-bg: #FFFFFF;
-      }
-      html, body, #root {
-        height: 100%;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family: 'Quicksand', sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                    color 0.4s ease, 
-                    border-color 0.4s ease;
-        overscroll-behavior-y: contain;
-      }
 
-      .card, button, div, span, header, main, svg, path, circle {
-        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                    color 0.4s ease, 
-                    border-color 0.4s ease, 
-                    fill 0.4s ease, 
-                    stroke 0.4s ease,
-                    box-shadow 0.4s ease;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kotori - Learning Made Easy.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <style>
+    :root {
+      --primary: #4A90E2;
+      --secondary: #6FCF97;
+      /* Green for Learned */
+      --accent: #FFD700;
+      /* Yellow for Learning */
+      --bg: #F8FAFB;
+      --text: #2C3E50;
+      --card-bg: #FFFFFF;
+    }
 
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      input, textarea, select {
-        background-color: var(--bg) !important;
-        color: var(--text) !important;
-        transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
-      }
-      .card {
-        background-color: var(--card-bg);
-      }
+    html,
+    body,
+    #root {
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
 
-      /* Scroll reveal animations */
-      .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      .reveal-visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.4s ease,
+        border-color 0.4s ease;
+      overscroll-behavior-y: contain;
+    }
 
-/* Chrome, Safari, Edge */
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
+    .card,
+    button,
+    div,
+    span,
+    header,
+    main,
+    svg,
+    path,
+    circle {
+      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.4s ease,
+        border-color 0.4s ease,
+        fill 0.4s ease,
+        stroke 0.4s ease,
+        box-shadow 0.4s ease;
+    }
 
-/* Firefox */
-html {
-  scrollbar-width: none;
-}
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
 
-/* IE / old Edge */
-body {
-  -ms-overflow-style: none;
-}
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
+    input,
+    textarea,
+    select {
+      background-color: var(--bg) !important;
+      color: var(--text) !important;
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
+    }
 
-    </style>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: 'var(--primary)',
-              secondary: 'var(--secondary)',
-              accent: 'var(--accent)',
-              bgSoft: 'var(--bg)',
-              charcoal: 'var(--text)',
-              card: 'var(--card-bg)',
-            }
+    .card {
+      background-color: var(--card-bg);
+    }
+
+    /* Scroll reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Chrome, Safari, Edge */
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+
+    /* Firefox */
+    html {
+      scrollbar-width: none;
+    }
+
+    /* IE / old Edge */
+    body {
+      -ms-overflow-style: none;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--primary)',
+            secondary: 'var(--secondary)',
+            accent: 'var(--accent)',
+            bgSoft: 'var(--bg)',
+            charcoal: 'var(--text)',
+            card: 'var(--card-bg)',
           }
         }
       }
-    </script>
+    }
+  </script>
   <script type="importmap">
 {
   "imports": {
@@ -114,10 +134,12 @@ body {
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
