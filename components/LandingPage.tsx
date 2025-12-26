@@ -59,7 +59,7 @@ const FEATURES = [
   { id: 'f4', icon: Cpu, title: "Optimized for Efficiency", desc: "Lightweight architecture built for speed. Kotori responds instantly, even on older devices.", colorClass: "text-purple-400" }
 ];
 
-const BentoCard = ({ 
+const BentoCard = React.memo(({ 
   feature,
   pos,
 }: { 
@@ -68,6 +68,7 @@ const BentoCard = ({
 }) => {
   const isMain = pos === 'main';
   const { icon: Icon, title, desc, colorClass } = feature;
+  
 
   return (
     <div 
@@ -95,9 +96,11 @@ const BentoCard = ({
       </div>
     </div>
   );
-};
+});
 
-const FAQItem = ({ q, a, index }: { q: string, a: string, index: number }) => {
+BentoCard.displayName = 'BentoCard';
+
+const FAQItem = React.memo(({ q, a, index }: { q: string, a: string, index: number }) => {
   const [isOpen, setIsOpen] = useState(false);
   
   return (
@@ -128,7 +131,9 @@ const FAQItem = ({ q, a, index }: { q: string, a: string, index: number }) => {
       </div>
     </div>
   );
-};
+});
+
+FAQItem.displayName = 'FAQItem';
 
 const LandingPage: React.FC<LandingPageProps> = ({ 
   theme, 
@@ -349,7 +354,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <div className="bento-grid gap-4 md:gap-6 h-[700px] md:h-[550px] w-full">
               {slotMap.map((featureIdx, slotIdx) => (
                 <BentoCard 
-                  key={FEATURES[featureIdx].id}
+                  key={`${FEATURES[featureIdx].id}-${slotIdx}`}
                   feature={FEATURES[featureIdx]}
                   pos={posKeys[slotIdx]}
                 />
@@ -450,7 +455,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
               { q: "When does Kotori launch?", a: "Kotori launches February 2026. Join the waitlist for updates and early access before the public release." },
               { q: "How does the waitlist work?", a: "Join the waitlist to get special lifetime perks. Plus, you'll be invited to vote on which features we build first." }
             ].map((item, i) => (
-              <FAQItem key={i} index={i} q={item.q} a={item.a} />
+              <FAQItem key={i} q={item.q} a={item.a} index={i} />
             ))}
           </div>
         </div>
@@ -460,7 +465,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-3"><KotoriIcon size={40} /><span className="text-2xl font-black text-primary tracking-tight">Kotori</span></div>
-            <p className="opacity-40 font-bold text-[10px] uppercase tracking-[0.2em] text-center md:text-left">Built for students who want to read more and switch tabs less.</p>
+            <p className="opacity-40 font-bold text-[10px] uppercase tracking-[0.2em] text-center md:text-left">Built by Violet, a language learner who knew what was missing.</p>
           </div>
           <div className="flex gap-8 text-[9px] font-black uppercase tracking-[0.2em] opacity-50">
             <button onClick={() => scrollToSection('features')} className="hover:text-primary transition-colors">Features</button>
