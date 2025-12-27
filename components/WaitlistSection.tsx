@@ -1,4 +1,4 @@
-
+import { supabase } from '../services/supabase';
 import React, { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2, Star, MessageCircle, Layout, Instagram, Twitter } from 'lucide-react';
 
@@ -10,19 +10,46 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'flying' | 'success'>('idle');
 
-// Fixed: Replaced supabase call with simulation for landing page consistency
-const handleJoin = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!email) return;
+  const handleJoin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus('flying');
 
-  setStatus('flying');
-  
-  // Simulate successful waitlist signup for the landing page
-  setTimeout(() => {
-    setStatus('success');
-    onSuccess?.();
-  }, 1200);
-};
+    try {
+      // 1. fetch the user's public ip
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const { ip } = await ipResponse.json();
+
+      // 2. check how many times this ip has signed up
+      const { count, error: countError } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_ip', ip);
+
+      if (count !== null && count >= 2) {
+        alert("The nest is full. Only two signups per nest.");
+        setStatus('idle');
+        return;
+      }
+
+      // 3. insert with the ip address
+      const { error } = await supabase
+        .from('waitlist')
+        .insert([{ email, user_ip: ip }]);
+
+      if (error) {
+        // handle error as before...
+      } else {
+        setTimeout(() => {
+          setStatus('success');
+          onSuccess?.();
+        }, 1200);
+      }
+    } catch (err) {
+      console.error("ip fetch failed", err);
+      // fallback: just try to insert without ip or show error
+    }
+  };
 
   return (
     <section id="waitlist" className="py-24 px-6 scroll-mt-20 relative overflow-hidden reveal">
@@ -33,26 +60,26 @@ const handleJoin = (e: React.FormEvent) => {
         <div className="bg-card border border-primary/10 rounded-[4rem] p-10 md:p-20 shadow-2xl relative">
           <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest">
             <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping"></div>
-            get notified when the bird takes flight
+            Get notified when the bird takes flight
           </div>
-          
+
           <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-8 leading-tight">
-            Take flight in <span className="text-primary">February 2026.</span>
+            Take flight in <span className="text-primary">February/March 2026.</span>
           </h2>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 text-left max-w-3xl mx-auto">
-             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-                <Star className="text-accent shrink-0" size={20} />
-                <p className="text-xs font-bold leading-relaxed opacity-70">Special early bird discount at launch</p>
-             </div>
-             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-                <MessageCircle className="text-primary shrink-0" size={20} />
-                <p className="text-xs font-bold leading-relaxed opacity-70">Vote on future languages & features</p>
-             </div>
-             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-                <Layout className="text-secondary shrink-0" size={20} />
-                <p className="text-xs font-bold leading-relaxed opacity-70">Exclusive access before public release</p>
-             </div>
+            <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
+              <Star className="text-accent shrink-0" size={20} />
+              <p className="text-xs font-bold leading-relaxed opacity-70">Special early bird discount at launch</p>
+            </div>
+            <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
+              <MessageCircle className="text-primary shrink-0" size={20} />
+              <p className="text-xs font-bold leading-relaxed opacity-70">Vote on future languages & features</p>
+            </div>
+            <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
+              <Layout className="text-secondary shrink-0" size={20} />
+              <p className="text-xs font-bold leading-relaxed opacity-70">Exclusive access before public release</p>
+            </div>
           </div>
 
           <form onSubmit={handleJoin} className="relative max-w-md mx-auto">
@@ -111,9 +138,9 @@ const handleJoin = (e: React.FormEvent) => {
                 <h3 className="text-3xl font-black mb-2 tracking-tight text-charcoal">Welcome to the flock!</h3>
                 <p className="opacity-60 font-bold mb-6 text-charcoal">You're on the list. Keep an eye on your inbox.</p>
                 <div className="p-5 bg-primary/5 rounded-2xl border border-primary/10 max-w-sm text-xs font-bold leading-relaxed mb-8 text-charcoal">
-                   We'll invite you to vote on our first official expansion language in the coming weeks!
+                  We'll invite you to vote on our first official expansion language in the coming weeks!
                 </div>
-                
+
                 <div className="flex gap-8">
                   <a href="#" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
                     <Instagram size={18} />
