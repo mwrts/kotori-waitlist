@@ -461,7 +461,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             {[
               { q: "What languages will Kotori support?", a: "We're launching with full support for Japanese, Spanish, Chinese, and French. We'll add more languages based on waitlist requests!" },
               { q: "When does Kotori launch?", a: "Kotori launches February/March 2026. Join the waitlist for updates and early access before the public release." },
-              { q: "How does the waitlist work?", a: "Join the waitlist to get special lifetime perks. Plus, you'll be invited to vote on which features we build first." },
+              { q: "How does the waitlist work?", a: "Join the waitlist to get special perks. Plus, you'll be invited to vote on which features we build first. Make your mark on the future of Kotori!" },
               { q: "What's the bird's name?", a: "The non-hatted ones are Namitori and the hatted ones are Kotori! There are many more to discover... Follow our Twitter and Instagram to get sneak peeks on them!" }
             ].map((item, i) => (
               <FAQItem key={i} q={item.q} a={item.a} index={i} />
@@ -539,3 +539,5 @@ const LandingPage: React.FC<LandingPageProps> = ({
 };
 
 export default LandingPage;
+
+// if you're reading this, please message me on usekotori@gmail.com and let me know how you got access to the code, please. i'm still a novice and still need to learn a lot about security. any flaws in the code are unintentional. thank you!
