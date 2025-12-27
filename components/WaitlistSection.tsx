@@ -142,11 +142,11 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
                 </div>
 
                 <div className="flex gap-8">
-                  <a href="#" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
+                  <a href="https://www.instagram.com/kotoriapp/" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
                     <Instagram size={18} />
                     @kotoriapp
                   </a>
-                  <a href="#" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
+                  <a href="https://x.com/kotoriapp" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
                     <Twitter size={18} />
                     @kotoriapp
                   </a>
