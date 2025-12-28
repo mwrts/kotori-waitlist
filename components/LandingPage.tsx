@@ -407,16 +407,39 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <div className="w-full h-[450px] sm:h-[520px] bg-primary/5 border border-primary/10 rounded-[3rem] p-3 sm:p-5 shadow-inner transform rotate-1 hover:rotate-0 transition-all duration-700 flex flex-col">
               <div className="bg-card rounded-[2.5rem] shadow-2xl overflow-hidden h-full flex flex-col relative group/card border border-primary/10">
                 <div className="bg-primary/10 p-4 flex justify-between items-center shrink-0 border-b border-primary/10">
-                  <div className="flex items-center gap-2"><KotoriIcon size={20} primaryColor="var(--primary)" /><span className="font-bold text-xs text-primary tracking-tight">Kotori Reader</span></div>
+                                 <div className="flex items-center gap-2"><KotoriIcon size={20} primaryColor="var(--primary)" /><span className="font-bold text-xs text-primary tracking-tight">Kotori Reader</span></div>
                 </div>
-                <div className="p-5 flex flex-wrap gap-2 content-start flex-1 overflow-y-auto scrollbar-hide bg-bgSoft/20">
+                <div className="p-6 flex flex-wrap gap-2 content-start flex-1 overflow-y-auto scrollbar-hide bg-bgSoft/20 leading-[3.2]">
                   {currentDemo.tokens.map((w, idx) => {
                     const status = demoWordStatuses[w.text] || WordStatus.NONE;
-                    let cls = 'bg-card border-primary/10 text-charcoal hover:border-primary/40 hover:text-primary';
-                    if (status === WordStatus.LEARNING) cls = 'bg-accent text-gray-900 border-accent shadow-md scale-105';
-                    else if (status === WordStatus.LEARNED) cls = 'bg-secondary text-white border-secondary shadow-md scale-105';
-                    else if (demoWord === w.text) cls = 'bg-primary text-white border-primary shadow-lg scale-105';
-                    return <button key={idx} type="button" onClick={() => handleDemoClick(w.text)} className={`px-2.5 py-1 rounded-lg border text-base sm:text-lg font-medium transition-all transform active:scale-90 ${cls}`}>{w.text}</button>;
+                    const isSelected = demoWord === w.text;
+                    
+                    let underlineClass = "absolute bottom-[2px] left-0 right-0 rounded-full transition-all duration-300 ";
+                    
+                    if (isSelected) {
+                      underlineClass += "h-[5px] opacity-100 ";
+                      if (status === WordStatus.LEARNING) underlineClass += "bg-accent";
+                      else if (status === WordStatus.LEARNED) underlineClass += "bg-secondary";
+                      else underlineClass += "bg-primary";
+                    } else if (status === WordStatus.LEARNING) {
+                      underlineClass += "h-[3px] opacity-80 bg-accent group-hover:h-[5px] group-hover:opacity-100";
+                    } else if (status === WordStatus.LEARNED) {
+                      underlineClass += "h-[3px] opacity-80 bg-secondary group-hover:h-[5px] group-hover:opacity-100";
+                    } else {
+                      underlineClass += "h-[1.5px] opacity-25 bg-primary group-hover:h-[4px] group-hover:opacity-60";
+                    }
+
+                    return (
+                      <button 
+                        key={idx} 
+                        type="button" 
+                        onClick={() => handleDemoClick(w.text)} 
+                        className="relative inline-block mx-1.5 cursor-pointer group select-none bg-transparent border-none p-0 outline-none"
+                      >
+                         <span className={`relative z-10 px-0.5 text-lg font-medium transition-all duration-200 text-charcoal ${isSelected ? 'text-charcoal font-black scale-110' : ''}`}>{w.text}</span>
+                         <span className={underlineClass} />
+                      </button>
+                    );
                   })}
                 </div>
                 <div className={`absolute inset-x-3 bottom-3 z-10 transition-all duration-700 transform ${demoWord ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
