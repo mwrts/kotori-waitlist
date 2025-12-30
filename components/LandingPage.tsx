@@ -53,10 +53,10 @@ const FeatherParticle = ({ delay = 0, x = 0, top = 0 }) => (
 type BentoPos = 'main' | 'vert' | 'wide' | 'small';
 
 const FEATURES = [
-  { id: 'f1', icon: Zap, title: "Instant Definitions", desc: "No more searching. One click gives you translation, pronunciation, and example sentences instantly.", colorClass: "text-orange-400" },
-  { id: 'f2', icon: Clipboard, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Kotori handles the translation and everything else.", colorClass: "text-blue-400" },
-  { id: 'f3', icon: Trophy, title: "Progress Tracking", desc: "Save words you're learning. We track your frequency and mastery so you never forget.", colorClass: "text-green-400" },
-  { id: 'f4', icon: Cpu, title: "Optimized for Efficiency", desc: "Lightweight architecture built for speed. Kotori responds instantly, even on older devices.", colorClass: "text-purple-400" }
+  { id: 'f1', icon: Zap, title: "Instant Definitions", desc: "No more half-assed Google Translations. One click shows you how to say it, its specific rules (if any), pronunciation, and example sentences.", colorClass: "text-orange-400" },
+  { id: 'f2', icon: Clipboard, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Kotori allows you to learn whatever you feel like learning instead of forcing words into you and expecting you to memorize them, unlike a certain... aquaintance of mine.", colorClass: "text-blue-400" },
+  { id: 'f3', icon: Trophy, title: "Progress Tracking", desc: "Save words you're learning. Track your own frequency and mastery so you never forget how far you've come (or went back, that's ok too).", colorClass: "text-green-400" },
+  { id: 'f4', icon: Bookmark, title: "Optimized for Everyone, Everywhere", desc: "Support, you ask? Kotori responds instantly, even on older devices. Phone, desktop... even on your TV? (actually had to test that one)... You name it, Kotori's there.", colorClass: "text-purple-400" }
 ];
 
 const BentoCard = React.memo(({
@@ -71,7 +71,7 @@ const BentoCard = React.memo(({
 
   return (
     <div
-      className={`absolute group bg-card p-5 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-700 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
+      className={`absolute group bg-card p-5 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-1000 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
       style={{
         top: `var(--pos-${pos}-t)`,
         left: `var(--pos-${pos}-l)`,
@@ -79,17 +79,17 @@ const BentoCard = React.memo(({
         height: `var(--pos-${pos}-h)`,
       } as React.CSSProperties}
     >
-      <div className={`flex flex-col h-full relative z-10 transition-all duration-700 ${isMain ? 'items-start' : 'items-center justify-center'}`}>
+      <div className={`flex flex-col h-full relative z-10 transition-all duration-1000 ${isMain ? 'items-start' : 'items-center justify-center'}`}>
         <div className={`shrink-0 flex items-center justify-center bg-bgSoft rounded-full shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-primary/10 ${colorClass} ${isMain ? 'w-14 h-14 md:w-16 md:h-16 mb-4 md:mb-6' : 'w-10 h-10 md:w-12 md:h-12'}`}>
           <Icon size={isMain ? 28 : 20} className="md:w-auto md:h-auto" />
         </div>
 
-        <div className={`flex flex-col gap-1 transition-all duration-700 ${isMain ? 'text-left' : 'text-center'}`}>
+        <div className={`flex flex-col gap-1 transition-all duration-1000 ${isMain ? 'text-left' : 'text-center'}`}>
           <h4 className={`font-black group-hover:text-primary transition-all tracking-tight leading-tight duration-500 ${isMain ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl' : 'text-xs sm:text-sm md:text-base'}`}>
             {title}
           </h4>
 
-          <div className={`overflow-hidden transition-all duration-700 ease-in-out ${isMain ? 'max-h-40 opacity-60 mt-2' : 'max-h-0 opacity-0'}`}>
+          <div className={`overflow-hidden transition-all duration-1000 ease-in-out ${isMain ? 'max-h-40 opacity-60 mt-2' : 'max-h-0 opacity-0'}`}>
             <p className="text-sm md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed max-w-sm">
               {desc}
             </p>
@@ -161,7 +161,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
   const hintConsumed = useRef(sessionStorage.getItem('kotori_hint_consumed') === 'true');
 
   useEffect(() => {
-    const observerOptions = { threshold: 0.1, root: containerRef.current };
+    const observerOptions = { threshold: 0.15, rootMargin: '-50px 0px' };
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -244,7 +244,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
   const currentDemo = DEMO_SENTENCES[activeTab];
 
   return (
-    <div ref={containerRef} className="h-screen w-full bg-bgSoft text-charcoal overflow-y-auto overflow-x-hidden scroll-smooth relative transition-colors duration-700">
+    <div ref={containerRef} className="h-screen w-full bg-bgSoft text-charcoal overflow-y-auto overflow-x-hidden scroll-smooth relative transition-colors duration-1000">
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden min-h-[400%]">
@@ -254,7 +254,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <FeatherParticle x={90} top={35} delay={8} />
       </div>
 
-      <nav className={`fixed top-0 left-0 right-0 z-50 bg-bgSoft/80 backdrop-blur-md border-b border-primary/10 transition-all duration-700 ${isNavVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 bg-bgSoft/80 backdrop-blur-md border-b border-primary/10 transition-all duration-1000 ${isNavVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <button type="button" onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-all group/logo">
             <div className="group-hover/logo:scale-110 transition-transform"><KotoriIcon size={36} /></div>
@@ -276,22 +276,22 @@ const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </nav>
 
-      <section className="relative pt-12 md:pt-24 pb-20 px-6 text-center reveal min-h-screen flex flex-col justify-center md:justify-start items-center">        <div className="max-w-4xl mx-auto space-y-12 flex flex-col items-center">
-        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-700">
+      <section className="relative pt-32 md:pt-48 pb-32 px-6 text-center reveal min-h-screen flex flex-col justify-center md:justify-start items-center">        <div className="max-w-5xl mx-auto space-y-12 flex flex-col items-center">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-full flex items-center justify-center p-4 border-2 border-primary/20 relative group/icon cursor-pointer shadow-2xl shadow-primary/10 transition-all duration-1000">
           <div className="group-hover/icon:scale-110 transition-transform duration-500"><KotoriIcon size={100} /></div>
         </div>
 
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-charcoal leading-[1.1] tracking-tight px-2">
-            Click any word. <br />
+            Click any word, <br />
             <span className="relative inline-block group/reveal cursor-default">
               <span className="relative z-10 text-primary italic transition-colors duration-500">
-                Learn effortlessly. For free.
+                Learn it. For free.
               </span>
               <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
             </span>
           </h1>
-          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Stop the tab-switching madness. Reading shouldn't feel like a chore. Just click the word you don't know and keep moving. We’ll handle the rest.</p>
+          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Ever felt like every app just wanted to teach you a few basic lessons that you can't even choose and then paywalling you when you try to actually understand more than "hot porridge, please"? Well, I did.</p>
         </div>
 
         <button
@@ -305,41 +305,27 @@ const LandingPage: React.FC<LandingPageProps> = ({
       </div>
       </section>
 
-      <section id="workflow" className="py-20 px-6 bg-card/50 reveal scroll-mt-20">
+      <section id="workflow" className="py-32 px-6 bg-card/50 reveal scroll-mt-20">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-12">Stop Breaking Your Flow</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            <div className="bg-red-900/10 p-8 md:p-10 rounded-[3rem] border border-red-500/20 text-left transition-transform hover:scale-[1.01] hover:shadow-xl duration-500">
-              <h3 className="text-lg font-black mb-6 flex items-center gap-2 text-red-500"><AlertCircle size={20} /> Traditional Workflow</h3>
-              <div className="space-y-5 opacity-80">
-                {["See unknown word", "Copy it manually", "Switch to Translate tab", "Paste and wait for result", "Switch back... wait, where was I?"].map((t, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <span className="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-[9px] font-black shrink-0">{i + 1}</span>
-                    <p className="font-bold text-sm sm:text-base text-charcoal">{t}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-primary/10 p-8 md:p-10 rounded-[3rem] border-2 border-primary/20 shadow-xl text-left relative overflow-hidden transition-transform hover:scale-[1.01] hover:shadow-2xl duration-500">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <h3 className="text-lg font-black mb-6 flex items-center gap-2 text-primary"><KotoriIcon size={20} /> Kotori Workflow</h3>
-              <div className="space-y-8 relative z-10">
-                {["Click unknown word", "See meaning + example instantly", "Keep reading naturally"].map((t, i) => (
-                  <div key={i} className="flex items-start gap-4"><span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-black shrink-0 shadow-lg shadow-primary/20">{i + 1}</span> <p className="font-bold text-base sm:text-lg">{t}</p></div>
-                ))}
-              </div>
-            </div>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-12">"Why should I consider Kotori?"</h2>
+          <div className="max-w-4xl mx-auto bg-card border-2 border-primary/20 rounded-[3rem] p-10 md:p-16 shadow-2xl relative overflow-hidden transition-all hover:scale-[1.01] duration-500">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            
+            <p className="text-xl md:text-3xl font-black text-charcoal leading-relaxed relative z-10">
+              "I built Kotori because I wanted to <span className="text-primary">actually read the stuff I liked: </span>Lyrics, subtitles, actual stuff locked behind language barriers... <span className="text-red-400">all without having to search word for word and write it down on a notebook and forget it next week.</span>"
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="features" className="py-20 px-6 reveal overflow-hidden">
+      <section id="features" className="py-32 px-6 reveal overflow-hidden">
         <div className="max-w-6xl mx-auto flex flex-col items-center">
           <div className="text-center mb-12 space-y-3">
             <h3 ref={scribbleTriggerRef} className="text-3xl md:text-5xl font-black tracking-tight leading-tight relative z-10">
-              Simple. Focused. <br className="sm:hidden" />
+              Learn <br className="sm:hidden" />
               <span className="relative inline-block">
-                Perfect.
+                whatever.
                 <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[180%] pointer-events-none overflow-visible -z-10 transform rotate-3" viewBox="0 0 140 100" preserveAspectRatio="none">
                   <path
                     d="M 15,45 C 15,5 115,5 115,45 C 115,85 15,85 15,45 C 15,15 125,15 125,50 C 125,85 5,85 5,50"
@@ -354,7 +340,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 </svg>
               </span>
             </h3>
-            <p className="text-charcoal opacity-50 font-medium text-base sm:text-lg max-w-xl mx-auto pt-4 italic">The building blocks of Fluency.</p>
+            <p className="text-charcoal opacity-50 font-medium text-base sm:text-lg max-w-xl mx-auto pt-4 italic">Paste your favorite song lyrics, book pages... Kotori can handle it.</p>
           </div>
 
           <div className="relative w-full max-w-5xl mx-auto h-[550px] md:h-[600px]">
@@ -373,25 +359,25 @@ const LandingPage: React.FC<LandingPageProps> = ({
               className="absolute bottom-4 right-4 md:bottom-[33%] md:right-[31%] z-30 w-14 h-14 md:w-16 md:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group border-4 border-card"
               aria-label="Cycle Features"
             >
-              <RefreshCw size={28} className="group-hover:rotate-180 transition-transform duration-700" />
+              <RefreshCw size={28} className="group-hover:rotate-180 transition-transform duration-1000" />
             </button>
           </div>
         </div>
       </section>
 
-      <section className="py-20 px-6 overflow-visible scroll-mt-20 reveal">
+      <section className="py-32 px-6 overflow-visible scroll-mt-20 reveal">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16">
           <div className="space-y-6 text-center lg:text-left max-w-xl">
             <h2 className="creative-title text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-              Context is <br className="sm:hidden" />
+              Implications are <br className="sm:hidden" />
               <span ref={underlineTriggerRef} className="text-primary relative inline-block whitespace-nowrap">
-                everything.
+                hard.
                 <svg className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-3 sm:h-4 pointer-events-none overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
                   <path d="M5 15 C 50 12, 150 18, 195 14" fill="none" stroke="var(--primary)" strokeWidth="4" strokeLinecap="round" className={`pencil-stroke ${isUnderlineVisible ? 'draw' : ''}`} />
                 </svg>
               </span>
             </h2>
-            <p className="text-base sm:text-lg opacity-60 font-medium leading-relaxed">Kotori doesn't just translate; it understands. You get the base form of every word, even when it's hidden in complex conjugations.</p>
+            <p className="text-base sm:text-lg opacity-60 font-medium leading-relaxed">Kotori actually understands the cross-references. You get the base form of every word, even when it's hidden in complex conjugations.</p>
             <div className="pt-4 border-t border-primary/10">
               <p className="text-[9px] font-black uppercase tracking-widest opacity-30 mb-3 text-center lg:text-left">Try the Demo:</p>
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
@@ -404,7 +390,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
 
           <div className="relative flex flex-col items-center shrink-0 w-full max-w-[360px] sm:max-w-[400px]">
             {showDemoHint && <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-20 animate-bounce pointer-events-none bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xl">Click a word!</div>}
-            <div className="w-full h-[450px] sm:h-[520px] bg-primary/5 border border-primary/10 rounded-[3rem] p-3 sm:p-5 shadow-inner transform rotate-1 hover:rotate-0 transition-all duration-700 flex flex-col">
+            <div className="w-full h-[450px] sm:h-[520px] bg-primary/5 border border-primary/10 rounded-[3rem] p-3 sm:p-5 shadow-inner transform rotate-1 hover:rotate-0 transition-all duration-1000 flex flex-col">
               <div className="bg-card rounded-[2.5rem] shadow-2xl overflow-hidden h-full flex flex-col relative group/card border border-primary/10">
                 <div className="bg-primary/10 p-4 flex justify-between items-center shrink-0 border-b border-primary/10">
                                  <div className="flex items-center gap-2"><KotoriIcon size={20} primaryColor="var(--primary)" /><span className="font-bold text-xs text-primary tracking-tight">Kotori Reader</span></div>
@@ -442,7 +428,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
                     );
                   })}
                 </div>
-                <div className={`absolute inset-x-3 bottom-3 z-10 transition-all duration-700 transform ${demoWord ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
+                <div className={`absolute inset-x-3 bottom-3 z-10 transition-all duration-1000 transform ${demoWord ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
                   <div className="bg-card border-2 border-primary/30 rounded-[2rem] p-4 shadow-2xl relative overflow-hidden backdrop-blur-xl max-h-[260px] overflow-y-auto scrollbar-hide">
                     <button type="button" onClick={() => setDemoWord(null)} className="absolute top-3 right-3 p-1 opacity-30 hover:opacity-100 transition-all hover:scale-110"><X size={16} /></button>
                     {demoWord && (
@@ -473,18 +459,18 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <WaitlistSection />
       </section>
 
-      <section id="faq" className="py-20 px-6 bg-card/40 reveal scroll-mt-20">
+      <section id="faq" className="py-32 px-6 bg-card/40 reveal scroll-mt-20">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-3">
             <h2 className="text-2xl sm:text-4xl font-black text-center tracking-tight leading-tight">Frequently Chirped Questions</h2>
-            <p className="text-charcoal opacity-50 font-medium max-w-xl mx-auto text-base sm:text-lg">Everything you need to know about the bird and the tool.</p>
+            <p className="text-charcoal opacity-50 font-medium max-w-xl mx-auto text-base sm:text-lg">Meet the new bird(s) in town.</p>
           </div>
           <div className="grid grid-cols-1 gap-5 max-w-3xl mx-auto">
             {[
-              { q: "What languages will Kotori support?", a: "We're launching with full support for Japanese, Spanish, Chinese, and French. We'll add more languages based on waitlist requests!" },
-              { q: "When does Kotori launch?", a: "Kotori launches February/March 2026. Join the waitlist for updates and early access before the public release." },
-              { q: "How does the waitlist work?", a: "Join the waitlist to get special perks. Plus, you'll be invited to vote on which features we build first. Make your mark on the future of Kotori!" },
-              { q: "What's the bird's name?", a: "The non-hatted ones are Namitori and the hatted ones are Kotori! There are many more to discover... Follow our Twitter and Instagram to get sneak peeks on them!" }
+              { q: "What languages will Kotori support?", a: "Launching with full support for Japanese, Spanish, Chinese, and French. I'll be reading the emails and polls though, so if you have any recommendations, just ask!" },
+              { q: "When does Kotori launch?", a: "Kotori launches February/March 2026 (hopefully). Join the waitlist if you want updates on development and early access before the public release." },
+              { q: "How does the waitlist work?", a: "Just a way for me to know how many people want to use Kotori so the site doesn't get out of hand and crashes if anything wild happens. Plus, you'll be invited to vote on which features are built." },
+              { q: "What's the bird's name?", a: "The non-hatted ones are Namitori and the hatted ones are Kotori. There are more, but don't tell anyone just yet. Follow our Twitter and Instagram to get sneak peeks on them." }
             ].map((item, i) => (
               <FAQItem key={i} q={item.q} a={item.a} index={i} />
             ))}
@@ -496,7 +482,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-3"><KotoriIcon size={40} /><span className="text-2xl font-black text-primary tracking-tight">Kotori</span></div>
-            <p className="opacity-40 font-bold text-[10px] uppercase tracking-[0.2em] text-center md:text-left">Built by Violet, a language learner who knew what was missing.</p>
+            <p className="opacity-40 font-bold text-[10px] uppercase tracking-[0.2em] text-center md:text-left">Built by Violet, a student, language learner and frustrated by not being able to find decent translations for Togenashi Togeari songs before their original release.</p>
           </div>
           <div className="flex gap-8 text-[9px] font-black uppercase tracking-[0.2em] opacity-50">
             <button onClick={() => scrollToSection('features')} className="hover:text-primary transition-colors">Features</button>

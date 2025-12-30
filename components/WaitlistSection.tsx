@@ -52,7 +52,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
   };
 
   return (
-    <section id="waitlist" className="py-24 px-6 scroll-mt-20 relative overflow-hidden reveal">
+    <section id="waitlist" className="py-32 px-6 scroll-mt-20 relative overflow-hidden reveal">
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-80 h-80 bg-primary/10 rounded-full blur-[100px] -z-10 animate-pulse"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] -z-10"></div>
 
@@ -60,17 +60,17 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
         <div className="bg-card border border-primary/10 rounded-[4rem] p-10 md:p-20 shadow-2xl relative">
           <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest">
             <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping"></div>
-            Get notified when the bird takes flight
+            Get notified when the bird leaves its nest
           </div>
 
           <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-8 leading-tight">
-            Take flight in <span className="text-primary">February/March 2026.</span>
+            Expect the messenger pigeon in <span className="text-primary">February/March 2026.</span> Be there. Please..?
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 text-left max-w-3xl mx-auto">
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
               <Star className="text-accent shrink-0" size={20} />
-              <p className="text-xs font-bold leading-relaxed opacity-70">Special early bird discount at launch</p>
+              <p className="text-xs font-bold leading-relaxed opacity-70">A discount at launch. Not 100% though, don't get your hopes up.</p>
             </div>
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
               <MessageCircle className="text-primary shrink-0" size={20} />
@@ -78,7 +78,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
             </div>
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
               <Layout className="text-secondary shrink-0" size={20} />
-              <p className="text-xs font-bold leading-relaxed opacity-70">Exclusive access before public release</p>
+              <p className="text-xs font-bold leading-relaxed opacity-70">Know how it's doing</p>
             </div>
           </div>
 
@@ -128,7 +128,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
                     <ArrowRight size={24} />
                   </button>
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">No spam. Only progress.</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">No spam. I have better things to do than that.</p>
               </div>
             ) : (
               <div className="animate-in zoom-in duration-500 flex flex-col items-center py-4">
