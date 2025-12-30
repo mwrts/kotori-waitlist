@@ -56,7 +56,7 @@ const FEATURES = [
   { id: 'f1', icon: Zap, title: "Instant Definitions", desc: "No more half-assed Google Translations. One click shows you how to say it, its specific rules (if any), pronunciation, and example sentences.", colorClass: "text-orange-400" },
   { id: 'f2', icon: Clipboard, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Kotori allows you to learn whatever you feel like learning instead of forcing words into you and expecting you to memorize them, unlike a certain... aquaintance of mine.", colorClass: "text-blue-400" },
   { id: 'f3', icon: Trophy, title: "Progress Tracking", desc: "Save words you're learning. Track your own frequency and mastery so you never forget how far you've come (or went back, that's ok too).", colorClass: "text-green-400" },
-  { id: 'f4', icon: Bookmark, title: "Optimized for long-term use", desc: "Support, you ask? Kotori responds and syncs instantly, even on older devices. Phone, desktop... even on your TV? (actually had to test that one)... You name it, Kotori's there.", colorClass: "text-purple-400" }
+  { id: 'f4', icon: Bookmark, title: "Optimized for long-term use", desc: "Support, you ask? Kotori responds and syncs instantly, even on older devices. Phone, desktop... even on your TV? (actually had to test that one)... You name it, Kotori's there with every single document you made and word you've saved.", colorClass: "text-purple-400" }
 ];
 
 const BentoCard = React.memo(({
