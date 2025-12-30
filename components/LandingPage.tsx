@@ -470,7 +470,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
               { q: "What languages will Kotori support?", a: "Launching with full support for Japanese, Spanish, Chinese, and French. I'll be reading the emails and polls though, so if you have any recommendations, just ask!" },
               { q: "When does Kotori launch?", a: "Kotori launches February/March 2026 (hopefully). Join the waitlist if you want updates on development and early access before the public release." },
               { q: "How does the waitlist work?", a: "Just a way for me to know how many people want to use Kotori so the site doesn't get out of hand and crashes if anything wild happens. Plus, you'll be invited to vote on which features are built." },
-              { q: "What's the bird's name?", a: "The non-hatted ones are Namitori and the hatted ones are Kotori. There are more, but don't tell anyone just yet. Follow our Twitter and Instagram to get sneak peeks on them." }
+              { q: "What's the bird's name?", a: "The non-hatted ones are Namitori and the hatted ones are Kotori. There are more, but don't tell anyone just yet. Follow Kotori's Twitter and Instagram to get sneak peeks on them." }
             ].map((item, i) => (
               <FAQItem key={i} q={item.q} a={item.a} index={i} />
             ))}
