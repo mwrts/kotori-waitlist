@@ -330,7 +330,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-32 bg-gradient-to-b from-white/10 to-transparent rotate-[-5deg] z-20 pointer-events-none"></div>
               <div className="bg-white p-3 pr-3 pb-8 pl-3 shadow-xl rounded-sm transform rotate-3 group-hover/photo:rotate-2 transition-transform duration-700">
                 <img src="/violet.png" alt="Violet" className="w-48 h-48 md:w-56 md:h-56 object-cover bg-gray-100 grayscale-[0.2] group-hover/photo:grayscale-0 transition-all duration-700" />
-                <p className="text-center font-handwriting text-black/60 text-xs mt-3 font-bold tracking-widest transform -rotate-1">violet.png</p>
+                <p className="text-center font-handwriting text-black/60 text-xs mt-3 font-bold tracking-widest transform -rotate-1">/violet.png</p>
               </div>
             </div>
             
