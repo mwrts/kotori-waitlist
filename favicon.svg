@@ -37,8 +37,10 @@
 
     <!-- Baseball Cap -->
     <g transform="rotate(-4, 60, 35)">
+      <!-- Brim (Behind Crown) -->
+      <path d="M80 43C80 43 105 40 112 48C105 56 80 50 80 48Z" fill="#EE423E" stroke="#3D3D3D" stroke-width="2.5" stroke-linejoin="round" />
+      <!-- Crown -->
       <path d="M28 45C28 28 40 18 60 18C80 18 92 28 92 45H28Z" fill="#EE423E" stroke="#3D3D3D" stroke-width="2.5" stroke-linejoin="round" />
-      <path d="M82 40C82 40 104 40 110 48C104 54 82 54 82 46" fill="#EE423E" stroke="#3D3D3D" stroke-width="2.5" stroke-linejoin="round" />
       <circle cx="60" cy="18" r="4.5" fill="#3D3D3D" />
       <circle cx="60" cy="18" r="2.5" fill="#EE423E" />
     </g>

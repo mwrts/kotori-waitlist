@@ -1,5 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
+import { flushSync } from 'react-dom';
 import LandingPage from './components/LandingPage';
 
 type ThemeType = 'morning' | 'sakura' | 'forest';
@@ -23,10 +23,11 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState<ThemeType>(() => (localStorage.getItem('kotori_theme') as ThemeType) || 'morning');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('kotori_dark_mode') === 'true');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     localStorage.setItem('kotori_theme', theme);
     localStorage.setItem('kotori_dark_mode', String(isDarkMode));
     
+    // Apply variables immediately for View Transition snapshotting
     const root = document.documentElement;
     const mode = isDarkMode ? 'dark' : 'light';
     const colors = THEME_CONFIG[theme][mode];
@@ -36,9 +37,32 @@ const App: React.FC = () => {
     root.style.setProperty('--bg', colors.bg);
     root.style.setProperty('--text', colors.text);
     root.style.setProperty('--card-bg', colors.card);
-    
     document.body.style.backgroundColor = colors.bg;
+    root.style.backgroundColor = colors.bg;
   }, [theme, isDarkMode]);
+
+  // Wrapper to enable View Transitions for theme changes
+  const applyThemeWithTransition = (updateFn: () => void) => {
+    // @ts-ignore - View Transitions API might not be in TS types yet
+    if (!document.startViewTransition) {
+      updateFn();
+      return;
+    }
+    // @ts-ignore
+    document.startViewTransition(() => {
+      flushSync(() => {
+        updateFn();
+      });
+    });
+  };
+
+  const handleSetTheme = (t: ThemeType) => {
+    applyThemeWithTransition(() => setTheme(t));
+  };
+
+  const handleSetIsDarkMode = (d: boolean) => {
+    applyThemeWithTransition(() => setIsDarkMode(d));
+  };
 
   const handleStart = () => {
     const waitlistSection = document.getElementById('waitlist');
@@ -52,12 +76,18 @@ const App: React.FC = () => {
       <LandingPage 
         onStart={handleStart} 
         theme={theme} 
-        setTheme={setTheme} 
+        setTheme={handleSetTheme} 
         isDarkMode={isDarkMode} 
-        setIsDarkMode={setIsDarkMode} 
+        setIsDarkMode={handleSetIsDarkMode} 
       />
+      <style>{`
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation-duration: 0.3s;
+          animation-timing-function: ease-out;
+        }
+      `}</style>
     </div>
   );
 };
-
 export default App;

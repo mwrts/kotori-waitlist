@@ -1,6 +1,6 @@
 import { supabase } from '../services/supabase';
 import React, { useState } from 'react';
-import { Mail, ArrowRight, CheckCircle2, Star, MessageCircle, Layout, Instagram, Twitter } from 'lucide-react';
+import { Envelope, ArrowRight, CheckCircle, Star, ChatCircle, Layout, InstagramLogo, TwitterLogo } from '@phosphor-icons/react';
 
 interface WaitlistSectionProps {
   onSuccess?: () => void;
@@ -64,21 +64,21 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
           </div>
 
           <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-8 leading-tight">
-            Expect the messenger pigeon in <span className="text-primary">February/March 2026.</span> Be there. Please..?
+            Expect the messenger pigeon to be at your door by <span className="text-primary">February/March 2026.</span> Be there. Please..?
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 text-left max-w-3xl mx-auto">
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-              <Star className="text-accent shrink-0" size={20} />
+              <Star className="text-accent shrink-0" size={20} weight="fill" />
               <p className="text-xs font-bold leading-relaxed opacity-70">A discount at launch. Not 100% though, don't get your hopes up.</p>
             </div>
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-              <MessageCircle className="text-primary shrink-0" size={20} />
-              <p className="text-xs font-bold leading-relaxed opacity-70">Vote on future languages & features</p>
+              <ChatCircle className="text-primary shrink-0" size={20} weight="fill" />
+              <p className="text-xs font-bold leading-relaxed opacity-70">Vote on future languages & features.</p>
             </div>
             <div className="p-5 bg-bgSoft/60 rounded-2xl flex gap-3 items-start border border-primary/5 transition-transform hover:scale-105 duration-300">
-              <Layout className="text-secondary shrink-0" size={20} />
-              <p className="text-xs font-bold leading-relaxed opacity-70">Know how it's doing</p>
+              <Layout className="text-secondary shrink-0" size={20} weight="fill" />
+              <p className="text-xs font-bold leading-relaxed opacity-70">Know how the development is going live.</p>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
             {status !== 'success' ? (
               <div className="space-y-6">
                 <div className="relative group">
-                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-primary opacity-40 group-focus-within:opacity-100 transition-opacity" size={20} />
+                  <Envelope className="absolute left-6 top-1/2 -translate-y-1/2 text-primary opacity-40 group-focus-within:opacity-100 transition-opacity" size={20} weight="bold" />
                   <input
                     type="email"
                     value={email}
@@ -125,7 +125,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
                     className={`w-full py-5 bg-primary text-white rounded-3xl font-black text-xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 overflow-hidden ${status === 'flying' ? 'cursor-wait opacity-90' : ''}`}
                   >
                     {status === 'flying' ? 'Taking Flight...' : 'Join the Waitlist'}
-                    <ArrowRight size={24} />
+                    <ArrowRight size={24} weight="bold" />
                   </button>
                 </div>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">No spam. I have better things to do than that.</p>
@@ -133,7 +133,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
             ) : (
               <div className="animate-in zoom-in duration-500 flex flex-col items-center py-4">
                 <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mb-6 border border-secondary/20">
-                  <CheckCircle2 className="text-secondary w-10 h-10" />
+                  <CheckCircle className="text-secondary w-10 h-10" weight="fill" />
                 </div>
                 <h3 className="text-3xl font-black mb-2 tracking-tight text-charcoal">Welcome to the flock!</h3>
                 <p className="opacity-60 font-bold mb-6 text-charcoal">You're on the list. Keep an eye on your inbox.</p>
@@ -143,11 +143,11 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({ onSuccess }) => {
 
                 <div className="flex gap-8">
                   <a href="https://www.instagram.com/kotoriapp/" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
-                    <Instagram size={18} />
+                    <InstagramLogo size={18} weight="fill" />
                     @kotoriapp
                   </a>
                   <a href="https://x.com/kotoriapp" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-primary transition-all">
-                    <Twitter size={18} />
+                    <TwitterLogo size={18} weight="fill" />
                     @kotoriapp
                   </a>
                 </div>

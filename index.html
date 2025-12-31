@@ -34,27 +34,8 @@
       font-family: 'Quicksand', sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.4s ease,
-        border-color 0.4s ease;
+      /* Removed global transitions to use View Transitions API instead */
       overscroll-behavior-y: contain;
-    }
-
-    .card,
-    button,
-    div,
-    span,
-    header,
-    main,
-    svg,
-    path,
-    circle {
-      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.4s ease,
-        border-color 0.4s ease,
-        fill 0.4s ease,
-        stroke 0.4s ease,
-        box-shadow 0.4s ease;
     }
 
     .scrollbar-hide::-webkit-scrollbar {

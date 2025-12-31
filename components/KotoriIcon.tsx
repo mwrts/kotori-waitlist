@@ -121,17 +121,17 @@ const KotoriIcon: React.FC<KotoriIconProps> = ({
 
           {/* Baseball Cap - Stays Vibrant Red */}
           <g transform="rotate(-4, 60, 35)">
-            {/* Crown */}
+            {/* Brim - Behind Crown */}
             <path 
-              d="M28 45C28 28 40 18 60 18C80 18 92 28 92 45H28Z" 
+              d="M80 43C80 43 105 40 112 48C105 56 80 50 80 48Z" 
               fill="#EE423E" 
               stroke={strokeColor} 
               strokeWidth={strokeWidthMain} 
               strokeLinejoin="round"
             />
-            {/* Brim */}
+            {/* Crown */}
             <path 
-              d="M82 40C82 40 104 40 110 48C104 54 82 54 82 46" 
+              d="M28 45C28 28 40 18 60 18C80 18 92 28 92 45H28Z" 
               fill="#EE423E" 
               stroke={strokeColor} 
               strokeWidth={strokeWidthMain} 
