@@ -18,7 +18,7 @@ import {
   Moon, 
   Sun, 
   CloudSun, 
-  Plant, 
+  Flower, 
   Tree,
   ArrowsClockwise,
   CaretRight,
@@ -57,7 +57,7 @@ const FeatherParticle = ({ delay = 0, x = 0, top = 0 }) => (
 type BentoPos = 'main' | 'bottom' | 'right1' | 'right2' | 'right3';
 
 const FEATURES = [
-  { id: 'f_speed', icon: Rocket, title: "Faster With You", desc: "Every time you look up a word, it gets cached and optimized for the entire community. The more you learn, the faster Kotori becomes for everyone.", colorClass: "text-accent" },
+  { id: 'f_speed', icon: Rocket, title: "Faster With You", desc: "Your price stays the same. Your limits go up as we grow. Every time you look up a word, it gets cached and optimized for the entire community. The more you learn, the faster Kotori becomes for everyone.", colorClass: "text-accent" },
   { id: 'f1', icon: BookOpen, title: "Instant Definitions", desc: "No more half-assed Google Translations. One click shows you how to say it, its specific rules (if any), pronunciation, and example sentences.", colorClass: "text-orange-400" },
   { id: 'f2', icon: Scroll, title: "Paste Any Story", desc: "Every word in your pasted text becomes clickable. Kotori allows you to learn whatever you feel like learning instead of forcing words into you and expecting you to memorize them, unlike a certain... aquaintance of mine.", colorClass: "text-blue-400" },
   { id: 'f3', icon: TrendUp, title: "Progress Tracking", desc: "Save words you're learning. Track your own frequency and mastery so you never forget how far you've come (or went back, that's ok too).", colorClass: "text-green-400" },
@@ -280,7 +280,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
               <div className="w-[1px] h-4 bg-primary/20 mx-2" />
               <div className="flex gap-0.5">
                 <button onClick={() => setTheme('morning')} className={`p-2 rounded-full transition-all ${theme === 'morning' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><CloudSun size={14} weight="fill" /></button>
-                <button onClick={() => setTheme('sakura')} className={`p-2 rounded-full transition-all ${theme === 'sakura' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Plant size={14} weight="fill" /></button>
+                <button onClick={() => setTheme('sakura')} className={`p-2 rounded-full transition-all ${theme === 'sakura' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Flower size={14} weight="fill" /></button>
                 <button onClick={() => setTheme('forest')} className={`p-2 rounded-full transition-all ${theme === 'forest' ? 'bg-primary text-white scale-110 shadow-md' : 'opacity-40 text-primary'}`}><Tree size={14} weight="fill" /></button>
               </div>
             </div>
@@ -303,7 +303,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
               <span className="absolute bottom-1 sm:bottom-2 left-0 w-full h-[25%] bg-accent/20 rounded-full -z-0"></span>
             </span>
           </h1>
-          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Ever felt like every app just wanted to teach you a few basic lessons that you can't even choose and then paywalling you when you try to actually understand more than "hot porridge, please"? Well, I did.</p>
+          <p className="text-base sm:text-xl opacity-60 font-medium max-w-2xl mx-auto leading-relaxed px-4">Ever feel like language apps teach you 'hot porridge, please' and then paywall everything else? Yeah. Me too.</p>
         </div>
 
         <button
