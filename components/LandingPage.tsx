@@ -76,7 +76,7 @@ const BentoCard = React.memo(({
 
   return (
     <div
-      className={`absolute group bg-card p-5 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-1000 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10' : 'z-0'}`}
+      className={`absolute group bg-card rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-1000 ease-out shadow-sm hover:shadow-2xl hover:scale-[1.01] overflow-hidden flex flex-col border-primary/10 ${isMain ? 'ring-2 ring-primary/30 z-10 p-6 md:p-10' : 'z-0 p-5 md:p-8'}`}
       style={{
         top: `var(--pos-${pos}-t)`,
         left: `var(--pos-${pos}-l)`,
@@ -94,8 +94,8 @@ const BentoCard = React.memo(({
             {title}
           </h4>
 
-          <div className={`overflow-hidden transition-all duration-1000 ease-in-out ${isMain ? 'max-h-40 opacity-60 mt-2' : 'max-h-0 opacity-0'}`}>
-            <p className="text-sm md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed max-w-sm">
+          <div className={`transition-all duration-1000 ease-in-out ${isMain ? 'opacity-60 mt-3 md:mt-4' : 'max-h-0 opacity-0'}`}>
+            <p className="text-sm sm:text-base md:text-lg font-medium group-hover:opacity-80 transition-all leading-relaxed">
               {desc}
             </p>
           </div>
@@ -371,7 +371,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <p className="text-charcoal opacity-50 font-medium text-base sm:text-lg max-w-xl mx-auto pt-4 italic">Paste your favorite song lyrics, book pages... Kotori can handle it.</p>
           </div>
 
-          <div className="relative w-full max-w-5xl mx-auto h-[550px] md:h-[600px]">
+          <div className="relative w-full max-w-5xl mx-auto h-[700px] md:h-[750px]">
             <div className="bento-container w-full h-full relative">
               {FEATURES.map((feature, idx) => (
                 <BentoCard
@@ -527,27 +527,27 @@ const LandingPage: React.FC<LandingPageProps> = ({
         /* Bento Morphing Variables */
         :root {
           /* Desktop: Main (Top-Left), Bottom (Bot-Left), Right Col (1-3) */
-          --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 65%; --pos-main-h: 65%;
-          --pos-bottom-t: 67%; --pos-bottom-l: 0%; --pos-bottom-w: 65%; --pos-bottom-h: 33%;
+          --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 65%; --pos-main-h: 70%;
+          --pos-bottom-t: 72%; --pos-bottom-l: 0%; --pos-bottom-w: 65%; --pos-bottom-h: 28%;
           
           --pos-right1-t: 0%; --pos-right1-l: 67%; --pos-right1-w: 33%; --pos-right1-h: 32%;
-          --pos-right2-t: 34%; --pos-right2-l: 67%; --pos-right2-w: 33%; --pos-right2-h: 31%;
-          --pos-right3-t: 67%; --pos-right3-l: 67%; --pos-right3-w: 33%; --pos-right3-h: 33%;
+          --pos-right2-t: 34%; --pos-right2-l: 67%; --pos-right2-w: 33%; --pos-right2-h: 34%;
+          --pos-right3-t: 70%; --pos-right3-l: 67%; --pos-right3-w: 33%; --pos-right3-h: 30%;
         }
 
         @media (max-width: 768px) {
           :root {
             /* Responsive: Bento Grid Layout */
-            /* Main: Full width top (38%) */
-            --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 100%; --pos-main-h: 38%;
+            /* Main: Full width top (42%) */
+            --pos-main-t: 0%; --pos-main-l: 0%; --pos-main-w: 100%; --pos-main-h: 42%;
             
-            /* Middle Row (29%) */
-            --pos-bottom-t: 40%; --pos-bottom-l: 0%; --pos-bottom-w: 49%; --pos-bottom-h: 29%;
-            --pos-right1-t: 40%; --pos-right1-l: 51%; --pos-right1-w: 49%; --pos-right1-h: 29%;
+            /* Middle Row (28%) */
+            --pos-bottom-t: 44%; --pos-bottom-l: 0%; --pos-bottom-w: 49%; --pos-bottom-h: 28%;
+            --pos-right1-t: 44%; --pos-right1-l: 51%; --pos-right1-w: 49%; --pos-right1-h: 28%;
             
-            /* Bottom Row (29%) */
-            --pos-right2-t: 71%; --pos-right2-l: 0%; --pos-right2-w: 49%; --pos-right2-h: 29%;
-            --pos-right3-t: 71%; --pos-right3-l: 51%; --pos-right3-w: 49%; --pos-right3-h: 29%;
+            /* Bottom Row (26%) */
+            --pos-right2-t: 74%; --pos-right2-l: 0%; --pos-right2-w: 49%; --pos-right2-h: 26%;
+            --pos-right3-t: 74%; --pos-right3-l: 51%; --pos-right3-w: 49%; --pos-right3-h: 26%;
           }
         }
 
