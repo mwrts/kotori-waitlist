@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Noto+Sans+JP:wght@300;400;500;700&amp;family=Quicksand:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#292b26",
+                        "on-tertiary": "#501e3f",
+                        "surface-bright": "#383a35",
+                        "surface-container-lowest": "#0d0f0b",
+                        "surface-container": "#1e201c",
+                        "surface": "#121410",
+                        "on-secondary-fixed": "#131f0a",
+                        "tertiary": "#f8b1da",
+                        "on-tertiary-fixed-variant": "#6a3557",
+                        "on-primary-fixed": "#0b2000",
+                        "on-primary-container": "#213d0b",
+                        "inverse-surface": "#e3e3dc",
+                        "surface-container-low": "#1a1c18",
+                        "secondary-fixed": "#d8e8c7",
+                        "outline-variant": "#43483d",
+                        "primary-fixed": "#c9eea9",
+                        "secondary-container": "#404d35",
+                        "tertiary-fixed": "#ffd8ec",
+                        "on-secondary": "#28341e",
+                        "secondary": "#bdcbac",
+                        "surface-tint": "#aed18f",
+                        "primary-container": "#87a96b",
+                        "inverse-primary": "#486730",
+                        "on-primary": "#1b3706",
+                        "surface-variant": "#333531",
+                        "on-error": "#690005",
+                        "tertiary-container": "#cd8bb2",
+                        "secondary-fixed-dim": "#bdcbac",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#333531",
+                        "outline": "#8e9285",
+                        "on-tertiary-fixed": "#360829",
+                        "inverse-on-surface": "#2f312d",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#562445",
+                        "on-background": "#e3e3dc",
+                        "on-secondary-container": "#afbd9e",
+                        "primary": "#aed18f",
+                        "error-container": "#93000a",
+                        "surface-dim": "#121410",
+                        "on-secondary-fixed-variant": "#3e4b33",
+                        "on-surface-variant": "#c4c8ba",
+                        "primary-fixed-dim": "#aed18f",
+                        "on-primary-fixed-variant": "#314e1b",
+                        "background": "#121410",
+                        "tertiary-fixed-dim": "#f8b1da",
+                        "on-surface": "#e3e3dc"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "japanese": ["Noto Sans JP"],
+                        "accent": ["Quicksand"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .japanese-text {
+            line-height: 2.2;
+            letter-spacing: 0.05em;
+        }
+        .interactive-word {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .interactive-word:hover {
+            background-color: rgba(174, 209, 143, 0.2);
+        }
+        .active-word {
+            background-color: rgba(174, 209, 143, 0.3);
+            box-shadow: 0 2px 0 0 #aed18f;
+        }
+        /* Custom scrollbar for a zen feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121410;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #292b26;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-accent lowercase selection:bg-primary/30 selection:text-primary">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-8 px-6 z-40 bg-[#1a1c18] dark:bg-[#1a1c18] w-64 border-none font-['Inter'] text-sm tracking-wide">
+<div class="text-xl font-black text-[#aed18f] lowercase mb-8">kotori</div>
+<div class="mb-10 px-2">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full bg-surface-container" data-alt="minimalist user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQRmy26VQrOQKcZCCWfR6xip3DA_nwPgOIpg6hX5tb5dE7-5yOgOJhuvTYegNwgOYb4kFENg0YvQWcxX8PF7owpUqXlr-AvQ_nrW41Ohs3vEOomgPaGhQhRzwkR0l5XjWm3wAPBSaoFUaqbrgZGYvjN2AJ0T9DRac_yIjdsGbES24DJa3IZn3CcMjVWavq7DFcEafVLfvaNCJr-6nTLx6Clpr8GEpwd3llA1E_dZ9soRWaPq8X3zW5hyrdINhDCZ04IYeJDdqjIi-W"/>
+<div>
+<div class="text-[#aed18f] font-bold">zen editorial</div>
+<div class="text-[#aed18f]/50 text-xs">user profile</div>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 text-[#aed18f]/50 py-3 px-6 hover:bg-[#292b26]/50 hover:text-[#aed18f] transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>home</span>
+</a>
+<a class="flex items-center gap-4 text-[#aed18f]/50 py-3 px-6 hover:bg-[#292b26]/50 hover:text-[#aed18f] transition-all" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>documents</span>
+</a>
+<a class="flex items-center gap-4 text-[#aed18f] bg-[#292b26] rounded-r-full py-3 px-6 ml-[-24px] pl-[24px]" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span>reader</span>
+</a>
+<a class="flex items-center gap-4 text-[#aed18f]/50 py-3 px-6 hover:bg-[#292b26]/50 hover:text-[#aed18f] transition-all" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>practice</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex min-h-screen relative overflow-hidden">
+<!-- The Canvas: Document Reader -->
+<section class="flex-1 bg-surface-container-low p-12 overflow-y-auto mb-20">
+<div class="max-w-3xl mx-auto">
+<!-- Asymmetric Header -->
+<header class="mb-16">
+<div class="flex flex-col gap-2">
+<span class="text-primary tracking-widest text-xs font-bold uppercase opacity-60">classic folklore</span>
+<h1 class="text-5xl font-headline font-bold text-on-surface tracking-tight leading-tight">momotaro</h1>
+<div class="h-1 w-12 bg-primary mt-4"></div>
+</div>
+</header>
+<!-- Japanese Text Body -->
+<article class="japanese-text font-japanese text-2xl text-on-surface-variant space-y-8 leading-[2.5]">
+<p>
+<span class="interactive-word active-word">昔</span>、<span class="interactive-word">昔</span>、あるところに<span class="interactive-word">おじいさん</span>と<span class="interactive-word">おばあさん</span>がいました。
+                    </p>
+<p>
+<span class="interactive-word">おじいさん</span>は山へ<span class="interactive-word">芝刈り</span>に、<span class="interactive-word">おばあさん</span>は川へ<span class="interactive-word">洗濯</span>に行きました。
+                    </p>
+<p>
+<span class="interactive-word">おばあさん</span>が川で<span class="interactive-word">洗濯</span>をしていると、川上から<span class="interactive-word">大きな</span><span class="interactive-word">桃</span>が、
+                        <span class="italic text-primary/40 font-accent">ドンブラコ、ドンブラコ</span>と流れてきました。
+                    </p>
+<p>
+                        「おや、これは<span class="interactive-word">見事</span>な<span class="interactive-word">桃</span>だこと。お家に持って帰って、おじいさんと食べましょう」
+                    </p>
+<p>
+<span class="interactive-word">おばあさん</span>は<span class="interactive-word">大きな</span><span class="interactive-word">桃</span>をひろいあげて、お家に帰りました。
+                    </p>
+</article>
+</div>
+</section>
+<!-- Sidebar Panel: Definition & Stats -->
+<aside class="w-96 bg-surface border-l border-outline-variant/10 flex flex-col p-8 overflow-y-auto mb-20">
+<!-- Definition Section -->
+<div class="space-y-8 mb-12">
+<div>
+<h3 class="text-primary/60 text-xs font-bold mb-4 tracking-widest">selected word</h3>
+<div class="text-5xl font-japanese font-bold text-on-surface">昔</div>
+<div class="text-primary/40 font-accent text-sm mt-1">mukashi</div>
+</div>
+<div class="bg-surface-container rounded-xl p-6 space-y-6">
+<div>
+<h4 class="text-on-surface-variant text-xs mb-2">meaning</h4>
+<p class="text-on-surface text-lg leading-relaxed">olden times; former; past; long ago; ago.</p>
+</div>
+<div>
+<h4 class="text-on-surface-variant text-xs mb-2">kanji form</h4>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded text-sm font-japanese">昔々</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-sm font-japanese">大昔</span>
+</div>
+</div>
+<div>
+<h4 class="text-on-surface-variant text-xs mb-2">context</h4>
+<p class="text-on-surface-variant text-sm italic">"once upon a time..." (standard fairytale opening)</p>
+</div>
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg shadow-xl shadow-primary/5 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">bookmark</span>
+                        save to vocabulary
+                    </button>
+</div>
+</div>
+<!-- Session Stats -->
+<div class="mt-auto pt-8 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<div class="text-xs text-primary/60 mb-1">words read</div>
+<div class="text-2xl font-bold text-on-surface">42</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<div class="text-xs text-primary/60 mb-1">session time</div>
+<div class="text-2xl font-bold text-on-surface">12:04</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Reader Controls Bar -->
+<footer class="fixed bottom-0 right-0 left-64 h-20 bg-surface-container/90 backdrop-blur-xl border-t border-outline-variant/10 px-8 flex items-center gap-8 z-50">
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings_voice</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-1">
+<div class="flex justify-between text-[10px] text-primary/40 px-1">
+<span>page 1 of 12</span>
+<span>15% completed</span>
+</div>
+<div class="relative h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-[15%] bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">text_fields</span>
+<span class="text-xs">18px</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+</footer>
+</main>
+<!-- Overlay Gradient for organic feel -->
+<div class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(174,209,143,0.02)_0%,transparent_100%)]"></div>
+</body></html>

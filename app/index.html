@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="dark" lang="ja">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kotori - Zen Editorial</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script src="https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/build/kuromoji.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#292b26", "on-tertiary": "#501e3f", "surface-bright": "#383a35",
+                        "surface-container-lowest": "#0d0f0b", "surface-container": "#1e201c", "surface": "#121410",
+                        "on-secondary-fixed": "#131f0a", "tertiary": "#f8b1da", "on-tertiary-fixed-variant": "#6a3557",
+                        "on-primary-fixed": "#0b2000", "on-primary-container": "#213d0b", "inverse-surface": "#e3e3dc",
+                        "surface-container-low": "#1a1c18", "secondary-fixed": "#d8e8c7", "outline-variant": "#43483d",
+                        "primary-fixed": "#c9eea9", "secondary-container": "#404d35", "tertiary-fixed": "#ffd8ec",
+                        "on-secondary": "#28341e", "secondary": "#bdcbac", "surface-tint": "#aed18f",
+                        "primary-container": "#87a96b", "inverse-primary": "#486730", "on-primary": "#1b3706",
+                        "surface-variant": "#333531", "on-error": "#690005", "tertiary-container": "#cd8bb2",
+                        "secondary-fixed-dim": "#bdcbac", "on-error-container": "#ffdad6", "surface-container-highest": "#333531",
+                        "outline": "#8e9285", "on-tertiary-fixed": "#360829", "inverse-on-surface": "#2f312d",
+                        "error": "#ffb4ab", "on-tertiary-container": "#562445", "on-background": "#e3e3dc",
+                        "on-secondary-container": "#afbd9e", "primary": "#aed18f", "error-container": "#93000a",
+                        "surface-dim": "#121410", "on-secondary-fixed-variant": "#3e4b33", "on-surface-variant": "#c4c8ba",
+                        "primary-fixed-dim": "#aed18f", "on-primary-fixed-variant": "#314e1b", "background": "#121410",
+                        "tertiary-fixed-dim": "#f8b1da", "on-surface": "#e3e3dc"
+                    },
+                    fontFamily: {
+                        "sans": ["Quicksand", "sans-serif"],
+                        "headline": ["Quicksand", "sans-serif"],
+                        "body": ["Quicksand", "sans-serif"],
+                        "label": ["Quicksand", "sans-serif"],
+                        "accent": ["Quicksand", "sans-serif"],
+                        "quicksand": ["Quicksand", "sans-serif"],
+                        "japanese": ["Noto Sans JP", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; font-family: 'Material Symbols Outlined' !important; }
+        body { font-family: 'Quicksand', sans-serif; background-color: #121410; }
+        .japanese-input, .japanese-text, .font-japanese { font-family: 'Noto Sans JP', sans-serif !important; }
+        .japanese-text { line-height: 2.2; letter-spacing: 0.05em; }
+        .interactive-word { cursor: pointer; transition: background-color 0.2s ease; padding: 0 2px; border-radius: 2px; }
+        .interactive-word:hover { background-color: rgba(174, 209, 143, 0.2); }
+        .active-word { background-color: rgba(174, 209, 143, 0.3); box-shadow: 0 2px 0 0 #aed18f; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #292b26; border-radius: 10px; }
+        .hidden-view { display: none !important; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-accent lowercase selection:bg-primary/30 selection:text-primary">
+
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-8 px-6 z-40 bg-[#1a1c18] dark:bg-[#1a1c18] w-64 border-none font-['Inter'] text-sm tracking-wide">
+    <div class="text-xl font-black text-[#aed18f] lowercase mb-8 font-['Plus_Jakarta_Sans']">kotori</div>
+    <div id="profile-btn" class="mb-10 px-2 cursor-pointer hover:bg-surface-container py-2 rounded-xl transition-colors -ml-2 -mt-2">
+        <div class="flex items-center gap-3">
+            <img class="w-10 h-10 rounded-full bg-surface-container object-cover profile-avatar-display" alt="avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcyAYeh5WiUYCKCdLXODPFYVuwCXVK3cSZTgYUtMsth14BYA-M1vD-Ame9MmN5MBC1qXotcMmuiNL5ZSyhwbHOwm-KY_DpbowC0aD-zfj-nfhTyy5e4kyGyI1M1cAMR7XjjYSi8eekJnwN-YasGnyD0BCtoYBNGYflecTASXZTQM20CGi6XBjBflMCTzyljMG53J6kJdkdm0M3lM0P4eSIOrcReqT_IMR7aPSyqbUqluSNxQJ4I9LT54BrRZTwf2MRGaSeZfgVXbcz"/>
+            <div>
+                <div class="text-[#aed18f] font-bold profile-name-display truncate max-w-[120px]">zen editorial</div>
+                <div class="text-[#aed18f]/50 text-xs">edit profile</div>
+            </div>
+        </div>
+    </div>
+    <nav class="flex flex-col gap-2">
+        <div id="nav-home" class="flex items-center gap-4 py-3 px-6 transition-all cursor-pointer">
+            <span class="material-symbols-outlined">home</span>
+            <span class="lowercase text-sm tracking-wide">home</span>
+        </div>
+        <div id="nav-documents" class="flex items-center gap-4 py-3 px-6 transition-all cursor-pointer">
+            <span class="material-symbols-outlined">description</span>
+            <span class="lowercase text-sm tracking-wide">documents</span>
+        </div>
+        <div id="nav-reader" class="flex items-center gap-4 py-3 px-6 transition-all cursor-pointer">
+            <span class="material-symbols-outlined">auto_stories</span>
+            <span class="lowercase text-sm tracking-wide">reader</span>
+        </div>
+        <div id="nav-practice" class="flex items-center gap-4 py-3 px-6 transition-all cursor-pointer">
+            <span class="material-symbols-outlined">fitness_center</span>
+            <span class="lowercase text-sm tracking-wide">practice</span>
+        </div>
+    </nav>
+</aside>
+
+<main class="ml-64 flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <!-- HOME VIEW -->
+    <div id="home-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-6xl mx-auto">
+        <header class="mb-16 mt-8">
+            <h1 class="text-5xl font-headline font-bold text-on-surface lowercase">welcome back, <span class="text-primary profile-name-display">zen editorial</span>.</h1>
+            <div class="h-1 w-12 bg-primary mt-6"></div>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10">
+                <h3 class="text-primary/60 text-xs font-bold mb-6 tracking-widest uppercase">dashboard stats</h3>
+                <div class="flex gap-12">
+                     <div>
+                         <p class="text-4xl font-headline font-bold" id="home-stats-docs">0</p>
+                         <p class="text-sm text-on-surface-variant">saved docs</p>
+                     </div>
+                     <div>
+                         <p class="text-4xl font-headline font-bold text-primary" id="home-stats-words">0</p>
+                         <p class="text-sm text-on-surface-variant">vocabulary bank</p>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                 <h2 class="text-xl font-bold font-headline lowercase">jump back in</h2>
+                 <button class="btn-new-doc text-primary font-bold lowercase hover:underline">create fresh +</button>
+            </div>
+            <div id="home-recent-docs" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Recent docs list -->
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTS LIST VIEW -->
+    <div id="documents-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-5xl mx-auto">
+        <header class="mb-12 mt-8 flex justify-between items-center">
+            <div>
+                 <h1 class="text-4xl font-headline font-bold text-on-surface lowercase">my documents</h1>
+                 <div class="h-1 w-12 bg-primary mt-4"></div>
+            </div>
+            <button class="btn-new-doc group flex items-center gap-3 bg-gradient-to-br from-[#aed18f] to-[#87a96b] text-on-primary-fixed px-6 py-3 rounded-xl font-bold lowercase transition-all hover:scale-[1.02]">
+                <span>new document</span>
+                <span class="material-symbols-outlined">add</span>
+            </button>
+        </header>
+        <div id="docs-list-container" class="flex flex-col gap-4">
+            <!-- Documents injected here -->
+        </div>
+    </div>
+
+    <!-- PROFILE VIEW -->
+    <div id="profile-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-2xl mx-auto">
+        <header class="mb-12 mt-8">
+            <h1 class="text-4xl font-headline font-bold text-on-surface lowercase">profile settings</h1>
+            <div class="h-1 w-12 bg-primary mt-4"></div>
+        </header>
+        <div class="bg-surface-container-low p-8 rounded-2xl border border-white/5 space-y-8">
+            <div class="flex items-center gap-6">
+                 <img class="w-24 h-24 rounded-full bg-surface-container object-cover profile-avatar-display"/>
+                 <div class="flex-grow">
+                     <label for="input-profile-avatar" class="text-[10px] text-primary/60 tracking-widest uppercase font-bold mb-1 block cursor-pointer">avatar image url</label>
+                     <input id="input-profile-avatar" type="text" class="w-full bg-surface-container border border-outline-variant/30 text-sm p-3 rounded-lg focus:ring-primary focus:border-primary text-on-surface" placeholder="https://..." />
+                 </div>
+            </div>
+            <div>
+                 <label for="input-profile-name" class="text-[10px] text-primary/60 tracking-widest uppercase font-bold mb-1 block cursor-pointer">display name</label>
+                 <input id="input-profile-name" type="text" class="w-full bg-surface-container border border-outline-variant/30 text-lg p-3 rounded-lg focus:ring-primary focus:border-primary text-on-surface" />
+            </div>
+            <div class="pt-4 border-t border-outline-variant/20 flex justify-end">
+                 <button id="btn-save-profile" class="bg-primary text-on-primary-fixed px-8 py-3 rounded-xl font-bold lowercase shadow hover:scale-[1.02] transition-transform">save changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATOR VIEW -->
+    <div id="creator-view" class="hidden-view flex-grow flex flex-col w-full h-full">
+        <header class="w-full px-12 py-8 flex justify-between items-center">
+            <div class="flex items-center gap-3 text-on-surface-variant lowercase text-sm">
+                <span>workspace</span><span class="material-symbols-outlined text-xs">chevron_right</span><span class="text-primary font-medium">new document</span>
+            </div>
+        </header>
+        <div class="flex-grow px-12 pb-12 flex gap-8">
+            <div class="flex-grow flex flex-col gap-6">
+                <div class="flex flex-col gap-2">
+                    <input id="input-title" class="bg-transparent border-none text-3xl font-headline font-bold text-on-surface focus:ring-0 placeholder-on-surface-variant/30 lowercase p-0 outline-none" placeholder="document title..." type="text"/>
+                    <div class="h-px w-24 bg-primary/20"></div>
+                </div>
+                <div class="flex-grow relative bg-surface-container-low rounded-xl p-8 shadow-inner overflow-hidden flex flex-col">
+                    <textarea id="input-text" class="japanese-input flex-grow bg-transparent border-none focus:ring-0 text-lg font-japanese leading-relaxed text-on-surface/90 resize-none placeholder-on-surface-variant/20 outline-none" placeholder="paste your japanese text here..."></textarea>
+                    <div class="absolute bottom-4 left-8 flex items-center gap-4 text-[10px] text-on-surface-variant/40 uppercase tracking-widest font-bold">
+                        <span id="ready-status">loading tokenizer...</span><div id="ready-indicator" class="w-1.5 h-1.5 rounded-full bg-primary/40 transition-colors"></div>
+                    </div>
+                </div>
+            </div>
+            <aside class="w-72 flex flex-col gap-6 pt-12">
+                <div class="bg-surface-container p-6 rounded-xl flex flex-col gap-6 backdrop-blur-xl border border-white/5">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] text-primary/60 tracking-widest uppercase font-bold">characters</span>
+                        <div class="flex items-baseline gap-2">
+                            <span id="char-count" class="text-4xl font-headline font-light text-on-surface">0</span><span class="text-xs text-on-surface-variant/50 lowercase">total glyphs</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-primary/5 rounded-xl border border-primary/10">
+                    <p class="text-xs leading-relaxed text-[#aed18f]/70 lowercase font-quicksand">kotori parses japanese text to provide instant definitions, keeping verb stems perfectly connected. paste any text to begin analyzing.</p>
+                </div>
+                <div class="mt-auto flex justify-end">
+                    <button id="btn-create-doc" class="group flex items-center gap-3 bg-gradient-to-br from-[#aed18f] to-[#87a96b] text-on-primary-fixed px-8 py-4 rounded-xl font-bold lowercase transition-all hover:scale-[1.02] shadow-lg">
+                        <span id="btn-create-doc-text">save document</span><span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- READER VIEW -->
+    <div id="reader-view" class="hidden-view flex-grow flex w-full h-full relative">
+        <section class="flex-1 bg-surface-container-low p-12 overflow-y-auto mb-20 h-screen">
+            <div class="max-w-3xl mx-auto pb-32">
+                <header class="mb-16">
+                    <div class="flex flex-col gap-2">
+                        <span class="text-primary tracking-widest text-xs font-bold uppercase opacity-60">kotori reading session</span>
+                        <h1 id="reader-title" class="text-5xl font-headline font-bold text-on-surface tracking-tight leading-tight">...</h1>
+                        <div class="h-1 w-12 bg-primary mt-4"></div>
+                    </div>
+                </header>
+                <article id="reader-content" class="japanese-text font-japanese text-3xl text-on-surface-variant space-y-8 leading-[3]"></article>
+            </div>
+        </section>
+        <aside class="w-96 bg-surface border-l border-outline-variant/10 flex flex-col p-8 overflow-y-auto h-screen">
+            <div class="space-y-8 mb-12">
+                <div>
+                    <h3 class="text-primary/60 text-xs font-bold mb-4 tracking-widest">selected block</h3>
+                    <div id="def-word" class="text-5xl font-japanese font-bold text-on-surface">-</div>
+                    <div id="def-reading" class="text-primary/40 font-accent text-sm mt-1">-</div>
+                </div>
+                <div class="bg-surface-container rounded-xl p-6 space-y-6">
+                    <div>
+                        <h4 class="text-on-surface-variant text-xs mb-2">meaning</h4>
+                        <p id="def-meaning" class="text-on-surface text-lg leading-relaxed">select a word to view info</p>
+                    </div>
+                    <div>
+                        <h4 class="text-on-surface-variant text-xs mb-2">base form</h4>
+                        <div id="def-context" class="flex gap-2 text-sm font-japanese text-on-surface-variant">-</div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex gap-2 relative">
+                            <select id="select-folder" class="bg-surface-container border border-outline-variant/30 text-sm p-3 rounded-lg w-full focus:ring-primary focus:border-primary text-on-surface">
+                            </select>
+                            <button id="btn-new-folder" class="bg-surface-container border border-outline-variant/30 text-primary p-3 rounded-lg whitespace-nowrap hover:bg-surface-bright transition-colors text-xs font-bold font-headline lowercase">
+                                + folder
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-save-learning" class="py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg shadow-xl shadow-primary/5 active:scale-[0.98] transition-all flex flex-col items-center justify-center text-xs">
+                                <span class="material-symbols-outlined text-sm mb-1">psychology</span> learning
+                            </button>
+                            <button id="btn-save-mastered" class="py-3 bg-surface-container-high hover:bg-surface-bright text-on-surface-variant font-bold rounded-lg border border-outline-variant/20 active:scale-[0.98] transition-all flex flex-col items-center justify-center text-xs">
+                                <span class="material-symbols-outlined text-sm mb-1">done_all</span> mastered
+                            </button>
+                        </div>
+                        <button id="btn-jisho" class="w-full py-4 bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright font-bold rounded-lg flex items-center justify-center gap-2 border border-outline-variant/20 transition-all">
+                            <span class="material-symbols-outlined text-sm">open_in_new</span> open in jisho
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto pt-8 border-t border-outline-variant/10">
+                <div class="bg-surface-container-low p-5 rounded-xl border border-white/5">
+                    <div class="text-xs text-primary/60 mb-2 uppercase tracking-widest font-bold">words read</div>
+                    <div class="flex items-baseline gap-2 mb-4">
+                        <div id="stats-words" class="text-3xl font-bold text-on-surface">0</div>
+                        <span class="text-[10px] text-on-surface-variant/50 lowercase">total blocks</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden flex shadow-inner">
+                        <div id="pb-mastered" class="h-full bg-primary transition-all duration-500 ease-out" style="width: 0%"></div>
+                        <div id="pb-learning" class="h-full bg-yellow-400/80 transition-all duration-500 ease-out" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- PRACTICE VIEW (Generic Container) -->
+    <div id="practice-view" class="hidden-view flex-grow flex flex-col p-8 lg:p-12 w-full max-w-[1400px] mx-auto min-h-screen relative">
+        <header class="mb-8 flex justify-between items-end">
+            <div>
+                <h2 class="text-4xl font-headline font-bold tracking-tight text-on-surface lowercase mb-2">practice</h2>
+                <div class="h-1 w-12 bg-primary rounded-full"></div>
+            </div>
+            <div class="flex items-center gap-4 border border-outline-variant/30 rounded-xl p-1 bg-surface-container-low">
+                 <button id="btn-practice-list-mode" class="px-4 py-2 rounded-lg bg-surface text-primary font-bold text-sm transition-colors">list</button>
+                 <button id="btn-practice-flash-mode" class="px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest font-bold text-sm transition-colors">flashcards</button>
+            </div>
+        </header>
+        
+        <!-- List Mode -->
+        <div id="practice-mode-list" class="flex-grow flex flex-col pt-4">
+             <div class="flex justify-between items-center mb-6">
+                  <div class="flex gap-4">
+                      <select id="practice-select-folder-list" class="bg-surface-container border border-outline-variant/30 text-sm p-3 rounded-lg focus:ring-primary text-on-surface w-48">
+                          <option value="all">all folders</option>
+                      </select>
+                  </div>
+                  <span id="practice-list-count" class="text-primary/70 font-bold text-sm">0 words</span>
+             </div>
+             
+             <div class="bg-surface-container-low rounded-2xl border border-outline-variant/10 overflow-hidden flex-grow flex flex-col">
+                  <div class="grid grid-cols-12 gap-4 p-4 border-b border-outline-variant/10 font-bold text-xs uppercase tracking-widest text-on-surface-variant">
+                       <div class="col-span-3">word</div>
+                       <div class="col-span-5">meaning</div>
+                       <div class="col-span-2">status</div>
+                       <div class="col-span-2 text-right">actions</div>
+                  </div>
+                  <div id="practice-full-list" class="flex-grow overflow-y-auto w-full custom-scrollbar"></div>
+             </div>
+        </div>
+
+        <!-- Flashcards Mode -->
+        <div id="practice-mode-flashcards" class="hidden-view flex flex-col lg:flex-row gap-12 flex-grow h-full pb-10">
+            <section class="flex-grow flex flex-col items-center justify-center space-y-12 h-full">
+                <div id="btn-flip" class="relative group w-full max-w-md aspect-[4/5] bg-surface-container-low rounded-[2rem] flex flex-col items-center justify-center p-8 transition-all duration-500 hover:bg-surface-container cursor-pointer select-none border border-outline-variant/10">
+                    <div class="relative flex flex-col items-center">
+                        <span id="flashcard-title" class="text-8xl font-japanese text-primary mb-8 leading-none -mt-4">-</span>
+                        <span id="flashcard-subtitle" class="text-on-surface-variant/70 text-sm lowercase tracking-widest text-center px-4">-</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <button class="px-10 py-4 rounded-2xl bg-surface-container-high hover:bg-surface-bright text-on-surface lowercase font-medium flex items-center gap-3 invisible">spacer</button>
+                    <button id="btn-master-card" class="px-10 py-4 rounded-2xl bg-primary-container text-on-primary-container lowercase font-bold flex items-center gap-3 shadow-lg shadow-primary-container/10 hover:scale-[1.02] transition-transform">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> mastered
+                    </button>
+                    <button id="btn-next-card" class="w-14 h-14 rounded-full flex items-center justify-center text-on-surface bg-surface-container-high hover:bg-surface-bright transition-colors border border-outline-variant/20">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </div>
+            </section>
+            <aside class="w-full lg:w-80 flex flex-col gap-6">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-lg font-semibold lowercase text-on-surface-variant">queue scope</h3>
+                </div>
+                <div class="px-2">
+                    <select id="practice-select-folder" class="w-full bg-surface-container border border-outline-variant/30 text-sm p-3 rounded-lg focus:ring-primary text-on-surface">
+                        <option value="all">all folders</option>
+                    </select>
+                </div>
+                <div class="px-2">
+                    <span id="practice-word-count" class="text-xs bg-surface-container px-3 py-2 rounded-full text-primary/70 mb-4 inline-block font-bold">0 total</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+    
+    <div class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(174,209,143,0.02)_0%,transparent_100%)] z-[-1]"></div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
