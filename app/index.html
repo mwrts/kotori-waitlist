@@ -148,6 +148,12 @@
                 <span class="lowercase text-sm tracking-wide">practice</span>
             </div>
         </nav>
+        <div class="mt-auto pt-6 border-t border-outline-variant/10">
+            <div id="btn-credits" class="flex items-center gap-4 py-3 px-6 text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer rounded-xl hover:bg-surface-container-low font-bold">
+                <span class="material-symbols-outlined text-[18px]">info</span>
+                <span class="lowercase text-xs tracking-widest uppercase">credits & licenses</span>
+            </div>
+        </div>
     </aside>
 
     <main class="ml-64 flex flex-col min-h-screen relative overflow-x-hidden">
@@ -470,6 +476,36 @@
             class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(174,209,143,0.02)_0%,transparent_100%)] z-[-1]">
         </div>
     </main>
+
+    <!-- Credits Modal -->
+    <div id="credits-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden-view flex items-center justify-center p-4 transition-all w-full h-full">
+        <div class="bg-surface-container-low w-full max-w-lg rounded-[2rem] border border-white/10 p-8 shadow-2xl flex flex-col gap-8 max-h-[85vh] overflow-hidden relative">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-headline font-bold text-primary lowercase">credits & licenses</h2>
+                <button id="btn-close-credits" class="text-on-surface-variant hover:text-on-surface hover:text-error transition-colors p-2 rounded-full hover:bg-surface-container-high"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            </div>
+            <div class="overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-6 text-sm font-medium lowercase">
+                <div class="bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-2xl border border-white/5">
+                    <h3 class="font-bold text-on-surface mb-2 text-lg font-headline">kuromoji.js & ipadic</h3>
+                    <p class="text-on-surface-variant/80 mb-2 leading-relaxed">provides the robust japanese text tokenizer and the underlying vocabulary dictionary.</p>
+                    <div class="text-[10px] uppercase tracking-widest font-bold text-primary/60">distributed under apache license 2.0</div>
+                </div>
+                <div class="bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-2xl border border-white/5">
+                    <h3 class="font-bold text-on-surface mb-2 text-lg font-headline">jisho.org api</h3>
+                    <p class="text-on-surface-variant/80 mb-2 leading-relaxed">provides english definitions, parts of speech, and jlpt levels. definitions are generously sourced from the jmdict/edict dictionary files.</p>
+                    <div class="text-[10px] uppercase tracking-widest font-bold text-primary/60">jmdict is property of electronic dictionary research & development group</div>
+                </div>
+                <div class="bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-2xl border border-white/5">
+                    <h3 class="font-bold text-on-surface mb-2 text-lg font-headline">ui framework & typography</h3>
+                    <p class="text-on-surface-variant/80 mb-2 leading-relaxed">styled using tailwind css (mit). typography uses quicksand and noto sans jp from google fonts (ofl license). icons mapped using material symbols (apache 2.0).</p>
+                </div>
+                <div class="bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-2xl border border-white/5">
+                    <h3 class="font-bold text-on-surface mb-2 text-lg font-headline">internet routing (cors)</h3>
+                    <p class="text-on-surface-variant/80 mb-2 leading-relaxed">api requests are securely routed using public proxies like codetabs and thingproxy to bypass browser restrictions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

@@ -99,16 +99,7 @@ const PARTICLE_DICT = {
     'て': {pos: 'particle', meaning: 'conjunctive (linking verbs/actions)'}
 };
 
-async function googleTranslate(text) {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl=en&dt=t&q=${encodeURIComponent(text)}`;
-    try {
-        const res = await fetch(url);
-        const json = await res.json();
-        return json[0].map(x => x[0]).join('');
-    } catch(e) {
-        return null;
-    }
-}
+// removed googleTranslate API function
 
 async function lookupWord(keyword) {
     if (PARTICLE_DICT[keyword]) {
@@ -153,17 +144,7 @@ async function lookupWord(keyword) {
         }
     }
     
-    if (!jishoResponse) {
-        const fallbackText = await googleTranslate(keyword);
-        if (fallbackText) {
-            jishoResponse = {
-                senses: [{ english_definitions: [fallbackText], parts_of_speech: [] }],
-                japanese: [{ word: keyword, reading: keyword }],
-                is_common: false,
-                jlpt: []
-            };
-        }
-    }
+    // No fallback if Jisho fails
     
     return jishoResponse;
 }
@@ -249,6 +230,14 @@ function setupListeners() {
     // Profile Click
     const profileBtn = document.getElementById('profile-btn');
     if(profileBtn) profileBtn.addEventListener('click', () => switchView('profile'));
+
+    // Credits Modal
+    const creditsBtn = document.getElementById('btn-credits');
+    const creditsModal = document.getElementById('credits-modal');
+    if(creditsBtn && creditsModal) {
+        creditsBtn.addEventListener('click', () => creditsModal.classList.remove('hidden-view'));
+        document.getElementById('btn-close-credits').addEventListener('click', () => creditsModal.classList.add('hidden-view'));
+    }
     
     // Profile Save
     const profileSave = document.getElementById('btn-save-profile');
@@ -801,9 +790,21 @@ function renderReader() {
                          jlptSpan.innerText = jlptStr;
                          document.getElementById('def-word').appendChild(jlptSpan);
                     }
-                } else if(!def && appState.selectedBlockIndex === index) {
-                    document.getElementById('def-meaning').innerText = 'Definition not found.';
+                } else if (!def && appState.selectedBlockIndex === index) {
+                    document.getElementById('def-meaning').innerHTML = `
+                        <div class="flex flex-col gap-3 mt-2">
+                            <span class="text-error text-sm">failed to load definition from dictionary.</span>
+                            <div class="flex gap-2">
+                                <button id="btn-retry-def" class="px-3 py-1.5 bg-surface-container-high border border-outline-variant/20 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors text-on-surface">retry</button>
+                                <a href="mailto:violet@usekotori.com?subject=Dictionary%20Lookup%20Failed&body=Word:%20${encodeURIComponent(lookupQuery)}" class="px-3 py-1.5 bg-error/10 border border-error/20 rounded-lg text-xs font-bold hover:bg-error/20 transition-colors text-error flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">mail</span> report issue</a>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('btn-retry-def').addEventListener('click', () => {
+                        span.click();
+                    });
                 }
+
             });
         }
         p.appendChild(span);
