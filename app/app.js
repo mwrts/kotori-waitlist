@@ -652,10 +652,14 @@ function renderPracticeList() {
 }
 
 function renderPracticeCard() {
-    const container = document.getElementById('flashcard-container');
-    const title = document.getElementById('flashcard-title');
-    const subtitle = document.getElementById('flashcard-subtitle');
+    const inner = document.getElementById('flashcard-inner');
+    const frontTitle = document.getElementById('flashcard-front-title');
+    const backTitle = document.getElementById('flashcard-back-title');
+    const backSubtitle = document.getElementById('flashcard-back-subtitle');
+    const backFolder = document.getElementById('flashcard-back-folder');
     const sideList = document.getElementById('practice-side-list');
+    
+    if (!inner || !frontTitle) return; // fail gracefully when outside practice view
     
     const words = getFilteredPracticeWords();
     const totalWords = appState.savedWords.length;
@@ -664,19 +668,23 @@ function renderPracticeCard() {
     document.getElementById('practice-word-count').innerHTML = `learning: ${words.length} &middot; master: ${masteredWords}`;
     
     // Sidebar list
-    sideList.innerHTML = '';
-    words.forEach((w, i) => {
-        const div = document.createElement('div');
-        div.className = `p-4 flex flex-col gap-1 rounded-2xl bg-surface-container-low transition-all cursor-pointer group border-l-2 ${i === appState.currentFlashcardIndex ? 'border-primary' : 'border-transparent hover:border-primary/50'}`;
-        div.innerHTML = `<span class="text-xl font-japanese text-on-surface group-hover:text-primary transition-colors">${w.word}</span><p class="text-xs text-on-surface-variant lowercase truncate">${w.meaning}</p>`;
-        div.onclick = () => { appState.currentFlashcardIndex = i; appState.isFlashcardFlipped = false; renderPracticeCard(); };
-        sideList.appendChild(div);
-    });
+    if (sideList) {
+        sideList.innerHTML = '';
+        words.forEach((w, i) => {
+            const div = document.createElement('div');
+            div.className = `p-4 flex flex-col gap-1 rounded-2xl bg-surface-container-low transition-all cursor-pointer group border-l-2 ${i === appState.currentFlashcardIndex ? 'border-primary' : 'border-transparent hover:border-primary/50'}`;
+            div.innerHTML = `<span class="text-xl font-japanese text-on-surface group-hover:text-primary transition-colors">${w.word}</span><p class="text-xs text-on-surface-variant lowercase truncate">${w.meaning}</p>`;
+            div.onclick = () => { appState.currentFlashcardIndex = i; appState.isFlashcardFlipped = false; renderPracticeCard(); };
+            sideList.appendChild(div);
+        });
+    }
 
     if(words.length === 0) {
-        title.innerText = "No Words";
-        subtitle.innerText = "Save words from reader";
-        // removed container class access to not throw since container was btn-flip
+        frontTitle.innerText = "no words";
+        backTitle.innerText = "no words";
+        backSubtitle.innerText = "-";
+        if (backFolder) backFolder.innerText = "-";
+        inner.classList.remove('flipped');
         return;
     }
     
@@ -684,13 +692,18 @@ function renderPracticeCard() {
     
     const word = words[appState.currentFlashcardIndex];
     if(appState.isFlashcardFlipped) {
-        title.innerText = word.meaning;
-        title.className = "text-4xl font-headline text-primary mb-4 text-center px-4";
-        subtitle.innerText = word.reading;
+        inner.classList.add('flipped');
     } else {
-        title.innerText = word.word;
-        title.className = "text-8xl font-japanese text-primary mb-4";
-        subtitle.innerText = "tap flip to see meaning";
+        inner.classList.remove('flipped');
+    }
+
+    frontTitle.innerText = word.word;
+    backTitle.innerText = word.meaning;
+    backSubtitle.innerText = word.reading;
+    
+    if (backFolder) {
+        const fNode = appState.folders.find(f => f.id === word.folderId);
+        backFolder.innerText = fNode ? fNode.name : 'general';
     }
 }
 
