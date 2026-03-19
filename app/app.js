@@ -2,7 +2,7 @@
 
 let tokenizer = null;
 
-kuromoji.builder({ dicPath: "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/" }).build((err, _tokenizer) => {
+kuromoji.builder({ dicPath: "dict/" }).build((err, _tokenizer) => {
     if (err) {
         console.error("Kuromoji initialization failed:", err);
         return;
