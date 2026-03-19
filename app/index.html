@@ -165,7 +165,7 @@
     <main class="md:ml-64 flex flex-col min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
 
         <!-- HOME VIEW -->
-        <div id="home-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-6xl mx-auto">
+        <div id="home-view" class="hidden-view flex-grow flex flex-col p-6 md:p-12 w-full max-w-6xl mx-auto">
             <header class="mb-16 mt-8">
                 <h1 class="text-5xl font-headline font-bold text-on-surface lowercase">welcome back, <span
                         class="text-primary profile-name-display">student</span>.</h1>
@@ -198,7 +198,7 @@
         </div>
 
         <!-- DOCUMENTS LIST VIEW -->
-        <div id="documents-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-5xl mx-auto">
+        <div id="documents-view" class="hidden-view flex-grow flex flex-col p-6 md:p-12 w-full max-w-5xl mx-auto">
             <header class="mb-12 mt-8 flex justify-between items-center">
                 <div>
                     <h1 class="text-4xl font-headline font-bold text-on-surface lowercase">my documents</h1>
@@ -216,7 +216,7 @@
         </div>
 
         <!-- PROFILE VIEW -->
-        <div id="profile-view" class="hidden-view flex-grow flex flex-col p-12 w-full max-w-2xl mx-auto">
+        <div id="profile-view" class="hidden-view flex-grow flex flex-col p-6 md:p-12 w-full max-w-2xl mx-auto">
             <header class="mb-12 mt-8">
                 <h1 class="text-4xl font-headline font-bold text-on-surface lowercase">profile settings</h1>
                 <div class="h-1 w-12 bg-primary mt-4"></div>
@@ -250,13 +250,13 @@
 
         <!-- CREATOR VIEW -->
         <div id="creator-view" class="hidden-view flex-grow flex flex-col w-full h-full">
-            <header class="w-full px-12 py-8 flex justify-between items-center">
+            <header class="w-full px-6 md:px-12 py-8 flex justify-between items-center">
                 <div class="flex items-center gap-3 text-on-surface-variant lowercase text-sm">
                     <span>workspace</span><span class="material-symbols-outlined text-xs">chevron_right</span><span
                         class="text-primary font-medium">new document</span>
                 </div>
             </header>
-            <div class="flex-grow px-12 pb-12 flex gap-8">
+            <div class="flex-grow px-6 md:px-12 pb-12 flex flex-col md:flex-row gap-8">
                 <div class="flex-grow flex flex-col gap-6">
                     <div class="flex flex-col gap-2">
                         <input id="input-title"
@@ -277,7 +277,7 @@
                         </div>
                     </div>
                 </div>
-                <aside class="w-72 flex flex-col gap-6 pt-12">
+                <aside class="w-full md:w-72 flex flex-col gap-6 pt-0 md:pt-12">
                     <div
                         class="bg-surface-container p-6 rounded-xl flex flex-col gap-6 backdrop-blur-xl border border-white/5">
                         <div class="flex flex-col gap-1">
@@ -534,7 +534,7 @@
         </div>
     </div>
 
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
 </body>
 
 </html>
