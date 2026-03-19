@@ -54,6 +54,13 @@ function segmentText(text) {
     const blocks = [];
     let currentBlock = null;
 
+    const isSymbolOrWhitespace = (token) => {
+        return token.pos === '記号' || 
+               /^\s+$/.test(token.surface_form) || 
+               token.surface_form === '　' || 
+               token.surface_form === '\n';
+    };
+
     for (let token of tokens) {
         const prevToken = currentBlock ? currentBlock.tokens[currentBlock.tokens.length-1] : null;
         const isDependent = 
@@ -63,12 +70,12 @@ function segmentText(text) {
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
             (prevToken && prevToken.pos === '接頭詞');
 
-        if (currentBlock && isDependent && token.surface_form !== '。' && token.surface_form !== '、' && token.surface_form !== '\n') {
+        if (currentBlock && isDependent && !isSymbolOrWhitespace(token)) {
             currentBlock.surface += token.surface_form;
             currentBlock.reading += token.reading || '';
             currentBlock.tokens.push(token);
         } else {
-            if (token.surface_form === '\n' || token.surface_form === '。' || token.surface_form === '、') {
+            if (isSymbolOrWhitespace(token)) {
                 blocks.push({ surface: token.surface_form, reading: token.reading||'', tokens: [token], isPunct: true });
                 currentBlock = null;
             } else {
@@ -826,12 +833,18 @@ function renderReader() {
         if (block.isPunct) {
             span.innerText = block.surface;
         } else {
-            span.className = 'interactive-word inline-block';
-            if (appState.selectedBlockIndex === index) span.classList.add('active-word');
-            
-            const isLearning = appState.savedWords.some(w => w.word === block.surface && w.status === 'learning');
-            if (isLearning) {
-                span.classList.add('underline', 'decoration-yellow-400/50', 'decoration-2', 'underline-offset-4');
+            // Filter out purely invisible content from being interactive
+            const isVisible = /[^\s\u3000]/.test(block.surface);
+            if (isVisible) {
+                span.className = 'interactive-word inline-block';
+                if (appState.selectedBlockIndex === index) span.classList.add('active-word');
+                
+                const isLearning = appState.savedWords.some(w => w.word === block.surface && w.status === 'learning');
+                if (isLearning) {
+                    span.classList.add('underline', 'decoration-yellow-400/50', 'decoration-2', 'underline-offset-4');
+                }
+            } else {
+                span.classList.add('select-none');
             }
             
             const furiParts = extractFurigana(block.surface, block.reading);
@@ -842,37 +855,39 @@ function renderReader() {
             });
             span.innerHTML = resultHtml;
 
-            span.addEventListener('click', async () => {
-                const isAlreadySelected = appState.selectedBlockIndex === index;
-                appState.selectedBlockIndex = index;
-                renderReader();
-                
-                // Open mobile drawer
-                document.getElementById('dict-sidebar').classList.remove('translate-y-full');
+            if (isVisible) {
+                span.addEventListener('click', async () => {
+                    const isAlreadySelected = appState.selectedBlockIndex === index;
+                    appState.selectedBlockIndex = index;
+                    renderReader();
+                    
+                    // Open mobile drawer
+                    document.getElementById('dict-sidebar').classList.remove('translate-y-full');
 
-                // Initial UI state
-                updateSidebarInfo(block, index);
-                
-                if (isAlreadySelected) return; // Don't re-fetch if already open
-                
-                const lookupQuery = block.surface;
-                let def = appState.defCache[lookupQuery];
-                if (!def) {
-                    def = await lookupWord(lookupQuery);
-                    const baseForm = block.tokens && block.tokens.length > 0 ? block.tokens.map(t => t.basic_form !== '*' ? t.basic_form : t.surface_form).join('') : null;
-                    if(!def && baseForm && baseForm !== lookupQuery) {
-                        def = await lookupWord(baseForm);
+                    // Initial UI state
+                    updateSidebarInfo(block, index);
+                    
+                    if (isAlreadySelected) return; // Don't re-fetch if already open
+                    
+                    const lookupQuery = block.surface;
+                    let def = appState.defCache[lookupQuery];
+                    if (!def) {
+                        def = await lookupWord(lookupQuery);
+                        const baseForm = block.tokens && block.tokens.length > 0 ? block.tokens.map(t => t.basic_form !== '*' ? t.basic_form : t.surface_form).join('') : null;
+                        if(!def && baseForm && baseForm !== lookupQuery) {
+                            def = await lookupWord(baseForm);
+                        }
+                        if (def) {
+                            appState.defCache[lookupQuery] = def;
+                            saveCache();
+                        }
                     }
-                    if (def) {
-                        appState.defCache[lookupQuery] = def;
-                        saveCache();
-                    }
-                }
 
-                if (appState.selectedBlockIndex === index) { 
-                    updateSidebarInfo(block, index, def);
-                }
-            });
+                    if (appState.selectedBlockIndex === index) { 
+                        updateSidebarInfo(block, index, def);
+                    }
+                });
+            }
         }
         p.appendChild(span);
     });
