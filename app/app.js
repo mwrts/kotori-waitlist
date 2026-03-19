@@ -113,17 +113,20 @@ async function lookupWord(keyword) {
     
     let jishoResponse = null;
     const targetUrl = 'https://jisho.org/api/v1/search/words?keyword=' + encodeURIComponent(keyword);
+    
+    // We specifically use /get for allorigins as it's more stable than /raw
     const fallbackProxies = [
-        `https://api.codetabs.com/v1/proxy?quest=${targetUrl}`,
-        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
+        `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`,
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
+        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`
     ];
 
     for (let proxy of fallbackProxies) {
         try {
             console.log(`attempting jisho lookup via: ${proxy}`);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000); 
+            const timeoutMs = 8000; // Increased to 8s for reliability
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs); 
             
             const res = await fetch(proxy, { signal: controller.signal });
             clearTimeout(timeoutId);
@@ -132,7 +135,21 @@ async function lookupWord(keyword) {
                 console.warn(`proxy ${proxy} returned status ${res.status}`);
                 continue;
             }
-            let parsed = await res.json();
+            
+            let dataText = await res.text();
+            
+            // Safety check: if proxy returns HTML (like a 404 or block page) skip it
+            if (dataText.trim().startsWith('<')) {
+                console.warn(`proxy ${proxy} leaked HTML, skipping...`);
+                continue;
+            }
+
+            let parsed = JSON.parse(dataText);
+            
+            // AllOrigins wraps the result in a "contents" string
+            if (proxy.includes('allorigins.win') && parsed.contents) {
+                parsed = JSON.parse(parsed.contents);
+            }
             
             if (parsed && parsed.data && parsed.data.length > 0) {
                 const item = parsed.data[0];
@@ -144,9 +161,11 @@ async function lookupWord(keyword) {
                 };
                 console.log(`jisho lookup successful via ${proxy}`);
                 break;
+            } else {
+                console.warn(`proxy ${proxy} returned no results for ${keyword}`);
             }
         } catch (e) {
-            console.warn(`jisho proxy error (${proxy}): ${e.message}`);
+            console.warn(`jisho proxy fail (${proxy}): ${e.message}`);
         }
     }
     
