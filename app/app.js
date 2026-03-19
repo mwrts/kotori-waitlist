@@ -2,7 +2,7 @@
 
 let tokenizer = null;
 
-kuromoji.builder({ dicPath: "https://unpkg.com/kuromoji@0.1.2/dict/" }).build((err, _tokenizer) => {
+kuromoji.builder({ dicPath: "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/" }).build((err, _tokenizer) => {
     if (err) {
         console.error("Kuromoji initialization failed:", err);
         return;
@@ -171,7 +171,7 @@ async function lookupWord(keyword) {
 // App State
 let appState = {
     view: 'home',
-    profile: { name: 'zen editorial', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDcyAYeh5WiUYCKCdLXODPFYVuwCXVK3cSZTgYUtMsth14BYA-M1vD-Ame9MmN5MBC1qXotcMmuiNL5ZSyhwbHOwm-KY_DpbowC0aD-zfj-nfhTyy5e4kyGyI1M1cAMR7XjjYSi8eekJnwN-YasGnyD0BCtoYBNGYflecTASXZTQM20CGi6XBjBflMCTzyljMG53J6kJdkdm0M3lM0P4eSIOrcReqT_IMR7aPSyqbUqluSNxQJ4I9LT54BrRZTwf2MRGaSeZfgVXbcz' },
+    profile: { name: 'student', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDcyAYeh5WiUYCKCdLXODPFYVuwCXVK3cSZTgYUtMsth14BYA-M1vD-Ame9MmN5MBC1qXotcMmuiNL5ZSyhwbHOwm-KY_DpbowC0aD-zfj-nfhTyy5e4kyGyI1M1cAMR7XjjYSi8eekJnwN-YasGnyD0BCtoYBNGYflecTASXZTQM20CGi6XBjBflMCTzyljMG53J6kJdkdm0M3lM0P4eSIOrcReqT_IMR7aPSyqbUqluSNxQJ4I9LT54BrRZTwf2MRGaSeZfgVXbcz' },
     docs: [],
     folders: [{id: 'default', name: 'general'}],
     activeDocId: null,
@@ -198,6 +198,7 @@ function loadData() {
         appState.folders = parsed.folders || [{id: 'default', name: 'general'}];
         appState.savedWords = parsed.savedWords || [];
         appState.profile = parsed.profile || appState.profile;
+        if (appState.profile.name === 'zen editorial') appState.profile.name = 'student';
         if (appState.docs.length > 0) appState.activeDocId = appState.docs[0].id;
     }
     
@@ -252,7 +253,7 @@ function setupListeners() {
     // Profile Save
     const profileSave = document.getElementById('btn-save-profile');
     if(profileSave) profileSave.addEventListener('click', () => {
-        appState.profile.name = document.getElementById('input-profile-name').value || 'zen editorial';
+        appState.profile.name = document.getElementById('input-profile-name').value || 'student';
         appState.profile.avatar = document.getElementById('input-profile-avatar').value || appState.profile.avatar;
         saveData();
         render(); // update all nav items

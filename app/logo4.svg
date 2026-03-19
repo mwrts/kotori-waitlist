@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Body -->
+  <circle cx="100" cy="100" r="70" fill="#aed18f" />
+  <!-- Belly -->
+  <circle cx="100" cy="120" r="50" fill="#d8e8c7" />
+  <!-- Eyes -->
+  <circle cx="75" cy="85" r="8" fill="#121410" />
+  <circle cx="125" cy="85" r="8" fill="#121410" />
+  <!-- Beak -->
+  <polygon points="90,100 110,100 100,115" fill="#f8b1da" />
+  <!-- Wings -->
+  <path d="M 30 100 Q 10 130 40 150 Q 50 120 30 100" fill="#87a96b" />
+  <path d="M 170 100 Q 190 130 160 150 Q 150 120 170 100" fill="#87a96b" />
+  <!-- Feet -->
+  <path d="M 75 160 L 75 180 L 65 185 M 75 180 L 85 185" stroke="#486730" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 125 160 L 125 180 L 115 185 M 125 180 L 135 185" stroke="#486730" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Lil leaf tail or crest -->
+  <path d="M 100 30 Q 80 10 100 10 Q 120 10 100 30" fill="#87a96b" />
+</svg>
