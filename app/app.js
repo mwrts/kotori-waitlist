@@ -106,6 +106,23 @@ const PARTICLE_DICT = {
     'て': {pos: 'particle', meaning: 'conjunctive (linking verbs/actions)'}
 };
 
+const AUX_INFLECTIONS = {
+    'たい': 'desire',
+    'た': 'past',
+    'ない': 'negative',
+    'ず': 'negative (literary)',
+    'ます': 'polite',
+    'せる': 'causative',
+    'させる': 'causative',
+    'れる': 'passive/potential',
+    'られる': 'passive/potential',
+    'たがる': 'desire (third person)',
+    'だ': 'declarative',
+    'です': 'polite declarative',
+    'だろう': 'conjecture',
+    'でしょう': 'polite conjecture'
+};
+
 // removed googleTranslate API function
 
 async function lookupWord(keyword) {
@@ -763,10 +780,30 @@ function renderPracticeCard() {
 function updateSidebarInfo(block, index, def = null) {
     if (appState.selectedBlockIndex !== index) return;
     
-    const lookupQuery = block.surface;
     document.getElementById('def-word').innerText = block.surface;
     document.getElementById('def-reading').innerText = kKataToHira(block.reading) || block.surface;
     
+    // Suffix Analysis
+    if (block.tokens && block.tokens.length > 1) {
+        const inflections = [];
+        for (let i = 1; i < block.tokens.length; i++) {
+            const t = block.tokens[i];
+            const name = AUX_INFLECTIONS[t.surface_form] || AUX_INFLECTIONS[t.basic_form];
+            if (name) inflections.push(`${t.surface_form} (${name})`);
+        }
+        if (inflections.length > 0) {
+            const sub = document.createElement('div');
+            sub.className = 'text-[10px] text-primary/60 font-bold uppercase tracking-wider mt-2 flex flex-wrap gap-2';
+            inflections.forEach(inf => {
+                const s = document.createElement('span');
+                s.className = 'px-2 py-0.5 bg-primary/10 rounded border border-primary/20';
+                s.innerText = inf;
+                sub.appendChild(s);
+            });
+            document.getElementById('def-word').appendChild(sub);
+        }
+    }
+
     // Show status/folder context immediately
     const existingWord = appState.savedWords.find(w => w.word === block.surface);
     const folderName = existingWord ? (appState.folders.find(f => f.id === existingWord.folderId)?.name || 'general') : '-';
@@ -796,18 +833,23 @@ function updateSidebarInfo(block, index, def = null) {
             document.getElementById('def-meaning').innerText = 'no exact meaning found.';
         }
         
-        const baseContent = block.tokens.map(t => t.basic_form !== '*' ? t.basic_form : t.surface_form).join('');
-        const ctxParent = contextEl.parentElement.parentElement;
-        if (baseContent !== lookupQuery && baseContent) {
-            ctxParent.style.display = 'block';
-            contextEl.innerText = baseContent + (existingWord ? ` [status: ${existingWord.status}]` : '');
+        // Correct base form: use the basic_form of the ROOT token (usually the first one)
+        const rootToken = block.tokens && block.tokens.length > 0 ? block.tokens[0] : null;
+        const rootBase = rootToken && rootToken.basic_form !== '*' ? rootToken.basic_form : null;
+        
+        const contextElParent = contextEl.parentElement.parentElement;
+        if (rootBase && rootBase !== block.surface) {
+            contextElParent.style.display = 'block';
+            contextEl.innerText = rootBase + (existingWord ? ` [status: ${existingWord.status}]` : '');
         }
 
         if (def.is_common) {
              const jlptSpan = document.createElement('span');
-             jlptSpan.className = 'px-3 py-1 bg-[#aed18f]/20 text-[#aed18f] rounded ml-2 text-xs uppercase font-bold align-middle';
+             jlptSpan.className = 'px-3 py-1 bg-[#aed18f]/20 text-[#aed18f] rounded ml-2 text-xs uppercase font-bold align-middle inline-block h-fit';
              const jlptStr = (def.jlpt && def.jlpt.length > 0) ? def.jlpt[0].toUpperCase().replace('-','') : 'COMMON';
              jlptSpan.innerText = jlptStr;
+             
+             // Wrap existing header content if needed, but for now just append to word
              document.getElementById('def-word').appendChild(jlptSpan);
         }
     }
@@ -873,9 +915,13 @@ function renderReader() {
                     let def = appState.defCache[lookupQuery];
                     if (!def) {
                         def = await lookupWord(lookupQuery);
-                        const baseForm = block.tokens && block.tokens.length > 0 ? block.tokens.map(t => t.basic_form !== '*' ? t.basic_form : t.surface_form).join('') : null;
-                        if(!def && baseForm && baseForm !== lookupQuery) {
-                            def = await lookupWord(baseForm);
+                        
+                        // Smarter Fallback: If "なりたい" fails, try the root "なる"
+                        const rootToken = block.tokens && block.tokens.length > 0 ? block.tokens[0] : null;
+                        const rootBase = rootToken && rootToken.basic_form !== '*' ? rootToken.basic_form : null;
+                        
+                        if(!def && rootBase && rootBase !== lookupQuery) {
+                            def = await lookupWord(rootBase);
                         }
                         if (def) {
                             appState.defCache[lookupQuery] = def;
