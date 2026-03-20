@@ -891,9 +891,10 @@ function updateSidebarInfo(block, index, def = null) {
     const learnBtn = document.getElementById('btn-save-learning');
     const masterBtn = document.getElementById('btn-save-mastered');
     
-    // Reset buttons to non-active styles
-    if (learnBtn) learnBtn.className = 'py-3 bg-yellow-400/10 text-yellow-500/80 border border-yellow-400/20 font-bold rounded-lg transition-all flex flex-col items-center justify-center text-xs hover:bg-yellow-400/20';
-    if (masterBtn) masterBtn.className = 'py-3 bg-surface-container-high text-on-surface-variant/60 border border-outline-variant/10 font-bold rounded-lg transition-all flex flex-col items-center justify-center text-xs hover:bg-surface-bright';
+    // Reset buttons to neutral gray default
+    const neutralClass = 'py-3 bg-surface-container-high text-on-surface-variant/60 border border-outline-variant/10 font-bold rounded-lg transition-all flex flex-col items-center justify-center text-xs hover:bg-surface-bright';
+    if (learnBtn) learnBtn.className = neutralClass;
+    if (masterBtn) masterBtn.className = neutralClass;
 
     const existingWord = appState.savedWords.find(w => w.word === block.surface);
     const folderName = existingWord ? (appState.folders.find(f => f.id === existingWord.folderId)?.name || 'general') : '-';
@@ -914,9 +915,13 @@ function updateSidebarInfo(block, index, def = null) {
     }
 
     if (def === undefined) {
-        document.getElementById('def-meaning').innerText = 'loading definition...';
+        // Only set loading if there's no meaning yet
+        const currentMeaning = document.getElementById('def-meaning').innerText;
+        if (!currentMeaning || currentMeaning === 'select a word' || currentMeaning.startsWith('loading')) {
+            document.getElementById('def-meaning').innerText = 'loading definition...';
+        }
     } else if (!def) {
-        document.getElementById('def-meaning').innerText = 'loading. shouldn\'t take long';
+        document.getElementById('def-meaning').innerText = 'no results found';
     } else {
         const mainSense = def.senses && def.senses.length > 0 ? def.senses[0] : null;
         if (mainSense) {
@@ -999,9 +1004,13 @@ function renderReader() {
                 if (appState.selectedBlockIndex === index) span.classList.add('active-word');
                 if (appState.multiSelection.includes(index)) span.classList.add('bg-primary/20', 'ring-1', 'ring-primary/40');
 
-                const isLearning = appState.savedWords.some(w => w.word === block.surface && w.status === 'learning');
-                if (isLearning) {
-                    span.classList.add('underline', 'decoration-yellow-400/50', 'decoration-2', 'underline-offset-4');
+                const wordState = appState.savedWords.find(w => w.word === block.surface);
+                if (wordState) {
+                    if (wordState.status === 'learning') {
+                        span.classList.add('underline', 'decoration-yellow-400/50', 'decoration-2', 'underline-offset-4');
+                    } else if (wordState.status === 'mastered') {
+                        span.classList.add('underline', 'decoration-primary/50', 'decoration-2', 'underline-offset-4');
+                    }
                 }
             } else {
                 span.classList.add('select-none');
