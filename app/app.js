@@ -73,6 +73,8 @@ function segmentText(text) {
             (token.pos_detail_1 === '非自立' && prevToken && prevToken.pos !== '名詞') ||
             (token.pos_detail_1 === '接尾' && prevToken && prevToken.pos !== '名詞') ||
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
+            (token.pos_detail_2 === '助数詞') || // Counters (一人, 三匹)
+            (token.pos_detail_1 === '数' && prevToken && (prevToken.pos_detail_1 === '数' || prevToken.pos === '名詞')) || // Numbers
             (prevToken && prevToken.pos === '接頭詞') ||
             forceJoin;
 
@@ -1060,19 +1062,33 @@ function modifyDocAtBlock(blockIdx, insideOffset, charToInsert) {
 function uniteSelectedBlocks() {
     const doc = appState.docs.find(d => d.id === appState.activeDocId);
     if (!doc) return;
-    const sortedIndices = [...appState.multiSelection].sort((a, b) => a - b);
-    let offsetAdjustment = 0;
-    for (let i = 0; i < sortedIndices.length - 1; i++) {
+    
+    // Sort indices and filter blocks with valid positions
+    const sortedIndices = [...appState.multiSelection]
+        .filter(idx => appState.parsedBlocks[idx] && appState.parsedBlocks[idx].wordPosition !== undefined)
+        .sort((a, b) => a - b);
+        
+    if (sortedIndices.length < 2) return;
+
+    // Process backwards to avoid shifting offsets of indices we haven't touched yet
+    for (let i = sortedIndices.length - 2; i >= 0; i--) {
         const currIdx = sortedIndices[i];
-        const nextIdx = sortedIndices[i + 1];
+        const nextIdx = sortedIndices[i+1];
         const currBlock = appState.parsedBlocks[currIdx];
         const nextBlock = appState.parsedBlocks[nextIdx];
-        if (!currBlock || !nextBlock || currBlock.wordPosition === undefined) continue;
-        const insertPos = currBlock.wordPosition - 1 + currBlock.surface.length + offsetAdjustment;
-        doc.text = doc.text.slice(0, insertPos) + '·' + doc.text.slice(insertPos);
-        offsetAdjustment += 1;
+        
+        // Start after current block, end at start of next block
+        const start = currBlock.wordPosition - 1 + currBlock.surface.length;
+        const end = nextBlock.wordPosition - 1;
+        
+        // Replace everything in front of next block with the joiner
+        if (start <= end) {
+            doc.text = doc.text.substring(0, start) + '·' + doc.text.substring(end);
+        }
     }
-    appState.multiSelection = []; appState.selectedBlockIndex = null;
+    
+    appState.multiSelection = []; 
+    appState.selectedBlockIndex = null;
     saveData(); loadActiveDoc(); renderReader();
 }
 function exportToFlashcards() {
