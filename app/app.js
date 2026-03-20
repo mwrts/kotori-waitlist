@@ -63,12 +63,16 @@ function segmentText(text) {
 
     for (let token of tokens) {
         const prevToken = currentBlock ? currentBlock.tokens[currentBlock.tokens.length-1] : null;
+        
+        // Smarter merging: Don't swallow important particles like 'te', 'mo', 'wa', 'ga'
+        const isParticleToSplit = token.pos === '助詞' && ['て', 'も', 'は', 'が', 'を', 'に', 'へ', 'と'].includes(token.surface_form);
+        
         const isDependent = 
-            token.pos === '助動詞' || 
+            (token.pos === '助動詞' || 
             token.pos_detail_1 === '非自立' || 
             token.pos_detail_1 === '接尾' || 
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
-            (prevToken && prevToken.pos === '接頭詞');
+            (prevToken && prevToken.pos === '接頭詞')) && !isParticleToSplit;
 
         if (currentBlock && isDependent && !isSymbolOrWhitespace(token)) {
             currentBlock.surface += token.surface_form;
@@ -863,19 +867,48 @@ function renderReader() {
     
     if(!doc) return;
 
-    let p = document.createElement('p');
-    p.className = 'whitespace-pre-wrap'; 
+    // Translation Toggle Button (Subtle)
+    const header = document.getElementById('reader-header');
+    if (header && !document.getElementById('btn-translate-toggle')) {
+        const btn = document.createElement('button');
+        btn.id = 'btn-translate-toggle';
+        btn.className = 'text-[10px] text-primary/40 uppercase font-bold tracking-widest mt-4 flex items-center gap-2 hover:text-primary transition-colors';
+        btn.innerHTML = `<span class="material-symbols-outlined text-sm">translate</span> <span id="trans-btn-text">show translations</span>`;
+        btn.onclick = toggleTranslations;
+        header.querySelector('div').appendChild(btn);
+    }
+
+    let lineDiv = document.createElement('div');
+    lineDiv.className = 'mb-8';
+    
+    let currentJapaneseLine = document.createElement('div');
+    currentJapaneseLine.className = 'flex flex-wrap items-baseline';
+    lineDiv.appendChild(currentJapaneseLine);
+
     appState.parsedBlocks.forEach((block, index) => {
         if (block.surface === '\n') {
-            p.appendChild(document.createElement('br'));
+            // Append line and create spacer or start new line
+            article.appendChild(lineDiv);
+            
+            // Check translation cache
+            const lineIdx = article.childNodes.length - 1;
+            if (appState.showTranslations) {
+                renderLineTranslation(lineDiv, lineIdx);
+            }
+
+            lineDiv = document.createElement('div');
+            lineDiv.className = 'mb-8';
+            currentJapaneseLine = document.createElement('div');
+            currentJapaneseLine.className = 'flex flex-wrap items-baseline';
+            lineDiv.appendChild(currentJapaneseLine);
             return;
         }
 
         const span = document.createElement('span');
         if (block.isPunct) {
             span.innerText = block.surface;
+            span.className = 'text-on-surface-variant/40';
         } else {
-            // Filter out purely invisible content from being interactive
             const isVisible = /[^\s\u3000]/.test(block.surface);
             if (isVisible) {
                 span.className = 'interactive-word inline-block';
@@ -902,60 +935,70 @@ function renderReader() {
                     const isAlreadySelected = appState.selectedBlockIndex === index;
                     appState.selectedBlockIndex = index;
                     renderReader();
-                    
-                    // Open mobile drawer
                     document.getElementById('dict-sidebar').classList.remove('translate-y-full');
-
-                    // Initial UI state
                     updateSidebarInfo(block, index);
                     
-                    if (isAlreadySelected) return; // Don't re-fetch if already open
+                    if (isAlreadySelected) return;
                     
                     const lookupQuery = block.surface;
                     let def = appState.defCache[lookupQuery];
                     if (!def) {
                         def = await lookupWord(lookupQuery);
-                        
-                        // Smarter Fallback: If "なりたい" fails, try the root "なる"
                         const rootToken = block.tokens && block.tokens.length > 0 ? block.tokens[0] : null;
                         const rootBase = rootToken && rootToken.basic_form !== '*' ? rootToken.basic_form : null;
-                        
-                        if(!def && rootBase && rootBase !== lookupQuery) {
-                            def = await lookupWord(rootBase);
-                        }
-                        if (def) {
-                            appState.defCache[lookupQuery] = def;
-                            saveCache();
-                        }
+                        if(!def && rootBase && rootBase !== lookupQuery) def = await lookupWord(rootBase);
+                        if (def) { appState.defCache[lookupQuery] = def; saveCache(); }
                     }
-
-                    if (appState.selectedBlockIndex === index) { 
-                        updateSidebarInfo(block, index, def);
-                    }
+                    if (appState.selectedBlockIndex === index) updateSidebarInfo(block, index, def);
                 });
             }
         }
-        p.appendChild(span);
+        currentJapaneseLine.appendChild(span);
     });
     
-    if (p.childNodes.length > 0) article.appendChild(p);
-    
+    // Final line
+    article.appendChild(lineDiv);
+    if (appState.showTranslations) renderLineTranslation(lineDiv, article.childNodes.length - 1);
+
     const validBlocks = appState.parsedBlocks.filter(b => !b.isPunct);
     document.getElementById('stats-words').innerText = validBlocks.length;
+}
+
+async function toggleTranslations() {
+    appState.showTranslations = !appState.showTranslations;
+    document.getElementById('trans-btn-text').innerText = appState.showTranslations ? 'hide translations' : 'show translations';
+    renderReader();
+}
+
+async function renderLineTranslation(lineDiv, lineIdx) {
+    const text = Array.from(lineDiv.querySelector('div').childNodes).map(n => n.innerText).join('').trim();
+    if (!text) return;
+
+    const transId = `trans-${lineIdx}`;
+    let transEl = lineDiv.querySelector('.translation-line');
+    if (!transEl) {
+        transEl = document.createElement('div');
+        transEl.className = 'translation-line text-sm italic text-on-surface-variant/60 mt-2 opacity-0 transition-opacity duration-500';
+        lineDiv.appendChild(transEl);
+    }
     
-    let mCount = 0; let lCount = 0;
-    validBlocks.forEach(b => {
-        const sw = appState.savedWords.find(w => w.word === b.surface);
-        if(sw) {
-            if(sw.status === 'mastered') mCount++;
-            else if(sw.status === 'learning') lCount++;
-        }
-    });
+    transEl.classList.remove('opacity-0');
     
-    const pbMastered = document.getElementById('pb-mastered');
-    const pbLearning = document.getElementById('pb-learning');
-    if(validBlocks.length > 0 && pbMastered && pbLearning) {
-        pbMastered.style.width = `${(mCount / validBlocks.length) * 100}%`;
-        pbLearning.style.width = `${(lCount / validBlocks.length) * 100}%`;
+    // Check locally first
+    if (appState.transCache && appState.transCache[text]) {
+        transEl.innerText = appState.transCache[text];
+        return;
+    }
+
+    transEl.innerText = '...';
+    try {
+        const proxyUrl = `https://kotori-proxy.jpgrottextra.workers.dev/?mode=translate&text=${encodeURIComponent(text)}`;
+        const res = await fetch(proxyUrl);
+        const transText = await res.text();
+        if (!appState.transCache) appState.transCache = {};
+        appState.transCache[text] = transText;
+        transEl.innerText = transText;
+    } catch (e) {
+        transEl.innerText = '[translation error]';
     }
 }
