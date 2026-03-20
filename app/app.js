@@ -69,8 +69,8 @@ function segmentText(text) {
         const prevToken = currentBlock ? currentBlock.tokens[currentBlock.tokens.length-1] : null;
         const isDependent = 
             (token.pos === '助動詞' && prevToken && prevToken.pos !== '名詞') || 
-            token.pos_detail_1 === '非自立' || 
-            token.pos_detail_1 === '接尾' || 
+            (token.pos_detail_1 === '非自立' && prevToken && prevToken.pos !== '名詞') || 
+            (token.pos_detail_1 === '接尾' && prevToken && prevToken.pos !== '名詞') || 
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
             (prevToken && prevToken.pos === '接頭詞');
 
@@ -856,10 +856,11 @@ function updateSidebarInfo(block, index, def = null) {
         }
 
         if (def.isUncertain) {
-            const warnAlert = document.createElement('div');
-            warnAlert.className = 'mt-4 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl text-yellow-200/80 text-[10px] lowercase italic';
-            warnAlert.innerText = 'this word might be a variation of another or not a word at all. please check with care';
-            document.getElementById('def-meaning').appendChild(warnAlert);
+            const warnSpan = document.createElement('span');
+            warnSpan.className = 'material-symbols-outlined text-yellow-400 text-xl align-middle ml-2 cursor-help transition-opacity hover:opacity-100 opacity-60';
+            warnSpan.innerText = 'warning';
+            warnSpan.title = 'this might be incorrect due to a segmenting error or variation. please check manually if it seems wrong.';
+            document.getElementById('def-word').appendChild(warnSpan);
         }
     }
 }
