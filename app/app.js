@@ -943,7 +943,7 @@ function updateSidebarInfo(block, index, def = null) {
             document.getElementById('def-word').appendChild(warnSpan);
         }
     }
-}
+} ///
 
 function renderReader() {
     const doc = appState.docs.find(d => d.id === appState.activeDocId);
