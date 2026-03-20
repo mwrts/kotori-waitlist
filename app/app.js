@@ -545,23 +545,23 @@ function setupListeners() {
     const readerSect = document.querySelector('#reader-view section');
     if (readerSect) {
         readerSect.addEventListener('click', (e) => {
-        if (!e.target.closest('.interactive-word')) {
-            if (appState.selectedBlockIndex !== null || appState.multiSelection.length > 0) {
-                appState.selectedBlockIndex = null;
-                appState.multiSelection = [];
-                renderReader();
+            if (!e.target.closest('.interactive-word')) {
+                if (appState.selectedBlockIndex !== null || appState.multiSelection.length > 0) {
+                    appState.selectedBlockIndex = null;
+                    appState.multiSelection = [];
+                    renderReader();
 
-                // Reset Sidebar UI
-                document.getElementById('def-word').innerText = '-';
-                document.getElementById('def-reading').innerText = '-';
-                document.getElementById('def-meaning').innerText = 'select a word to view info';
-                document.getElementById('def-context').parentElement.parentElement.style.display = 'block';
-                document.getElementById('def-context').innerText = '-';
+                    // Reset Sidebar UI
+                    document.getElementById('def-word').innerText = '-';
+                    document.getElementById('def-reading').innerText = '-';
+                    document.getElementById('def-meaning').innerText = 'select a word to view info';
+                    document.getElementById('def-context').parentElement.parentElement.style.display = 'block';
+                    document.getElementById('def-context').innerText = '-';
 
-                // Close mobile sheet
-                document.getElementById('dict-sidebar').classList.add('translate-y-full');
+                    // Close mobile sheet
+                    document.getElementById('dict-sidebar').classList.add('translate-y-full');
+                }
             }
-        }
         });
     }
 
@@ -901,7 +901,7 @@ function updateSidebarInfo(block, index, def = null) {
     if (def === undefined) {
         document.getElementById('def-meaning').innerText = 'loading definition...';
     } else if (!def) {
-        document.getElementById('def-meaning').innerText = 'meaning not found. please check manually!';
+        document.getElementById('def-meaning').innerText = 'loading. if it takes way too long, please refresh or email violet@usekotori.com to report it';
     } else {
         const mainSense = def.senses && def.senses.length > 0 ? def.senses[0] : null;
         if (mainSense) {
