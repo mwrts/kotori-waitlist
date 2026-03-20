@@ -72,9 +72,12 @@ function segmentText(text) {
             (token.pos_detail_1 === '非自立' && prevToken && prevToken.pos !== '名詞') || 
             (token.pos_detail_1 === '接尾' && prevToken && prevToken.pos !== '名詞') || 
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
+            (token.surface_form === 'みたい' && prevToken && prevToken.pos === '名詞' ? false : false) || // wait, simpler:
             (prevToken && prevToken.pos === '接頭詞');
-
-        if (currentBlock && isDependent && !isSymbolOrWhitespace(token)) {
+        
+        // Force split for 'みたい' specifically if following a noun
+        let forcedSplit = (token.surface_form === 'みたい' || token.surface_form === 'みたいた') && prevToken && prevToken.pos === '名詞';
+        if (currentBlock && (isDependent || (token.pos === '助詞' && prevToken.pos !== '名詞')) && !isSymbolOrWhitespace(token) && !forcedSplit) {
             currentBlock.surface += token.surface_form;
             currentBlock.reading += token.reading || '';
             currentBlock.tokens.push(token);
@@ -820,8 +823,16 @@ function updateSidebarInfo(block, index, def = null) {
         contextEl.innerText = '-';
     }
 
-    if (!def) {
+    if (def === undefined) {
         document.getElementById('def-meaning').innerText = 'loading definition...';
+    } else if (!def) {
+        document.getElementById('def-meaning').innerText = 'no exact meaning found.';
+        // Show warning even if no result, as it might be a segmenting error
+        const warnSpan = document.createElement('span');
+        warnSpan.className = 'material-symbols-outlined text-yellow-400 text-xl align-middle ml-2 cursor-help opacity-60 hover:opacity-100 transition-opacity';
+        warnSpan.innerText = 'warning';
+        warnSpan.title = 'no match found. this might be due to a segmenting error. please check manually!';
+        document.getElementById('def-word').appendChild(warnSpan);
     } else {
         const mainSense = def.senses && def.senses.length > 0 ? def.senses[0] : null;
         if (mainSense) {
@@ -834,7 +845,7 @@ function updateSidebarInfo(block, index, def = null) {
                 document.getElementById('def-meaning').innerText = meaningText;
             }
         } else {
-            document.getElementById('def-meaning').innerText = 'no exact meaning found.';
+            document.getElementById('def-meaning').innerText = 'no meanings listed.';
         }
         
         // Correct base form: use the basic_form of the ROOT token (usually the first one)
@@ -867,7 +878,7 @@ function updateSidebarInfo(block, index, def = null) {
 
 function renderReader() {
     const doc = appState.docs.find(d => d.id === appState.activeDocId);
-    document.getElementById('reader-title').innerText = doc ? doc.title : 'no document';
+    document.getElementById('reader-title').innerHTML = (doc ? doc.title : 'no document') + ' <span class="text-[10px] opacity-20 ml-2">v15</span>';
     const article = document.getElementById('reader-content');
     article.innerHTML = '';
     
