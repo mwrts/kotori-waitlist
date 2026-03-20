@@ -63,16 +63,12 @@ function segmentText(text) {
 
     for (let token of tokens) {
         const prevToken = currentBlock ? currentBlock.tokens[currentBlock.tokens.length-1] : null;
-        
-        // Smarter merging: Don't swallow important particles like 'te', 'mo', 'wa', 'ga'
-        const isParticleToSplit = token.pos === '助詞' && ['て', 'も', 'は', 'が', 'を', 'に', 'へ', 'と'].includes(token.surface_form);
-        
         const isDependent = 
-            (token.pos === '助動詞' || 
+            token.pos === '助動詞' || 
             token.pos_detail_1 === '非自立' || 
             token.pos_detail_1 === '接尾' || 
             (token.pos === '助詞' && prevToken && prevToken.pos !== '名詞') ||
-            (prevToken && prevToken.pos === '接頭詞')) && !isParticleToSplit;
+            (prevToken && prevToken.pos === '接頭詞');
 
         if (currentBlock && isDependent && !isSymbolOrWhitespace(token)) {
             currentBlock.surface += token.surface_form;
@@ -239,11 +235,16 @@ function loadData() {
     if (cache) {
         try { appState.defCache = JSON.parse(cache); } catch(e){}
     }
+    const tCache = localStorage.getItem('kotori_trans_cache');
+    if (tCache) {
+        try { appState.transCache = JSON.parse(tCache); } catch(e){}
+    }
 }
 
 function saveCache() {
     try {
         localStorage.setItem('kotori_dict_cache', JSON.stringify(appState.defCache));
+        localStorage.setItem('kotori_trans_cache', JSON.stringify(appState.transCache || {}));
     } catch(e) {
         console.warn("Storage full, resetting dict cache...");
         appState.defCache = {};
@@ -852,9 +853,14 @@ function updateSidebarInfo(block, index, def = null) {
              jlptSpan.className = 'px-3 py-1 bg-[#aed18f]/20 text-[#aed18f] rounded ml-2 text-xs uppercase font-bold align-middle inline-block h-fit';
              const jlptStr = (def.jlpt && def.jlpt.length > 0) ? def.jlpt[0].toUpperCase().replace('-','') : 'COMMON';
              jlptSpan.innerText = jlptStr;
-             
-             // Wrap existing header content if needed, but for now just append to word
              document.getElementById('def-word').appendChild(jlptSpan);
+        }
+
+        if (def.isUncertain) {
+            const warnAlert = document.createElement('div');
+            warnAlert.className = 'mt-4 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl text-yellow-200/80 text-[10px] lowercase italic';
+            warnAlert.innerText = 'this word might be a variation of another or not a word at all. please check with care';
+            document.getElementById('def-meaning').appendChild(warnAlert);
         }
     }
 }
@@ -868,14 +874,14 @@ function renderReader() {
     if(!doc) return;
 
     // Translation Toggle Button (Subtle)
-    const header = document.getElementById('reader-header');
-    if (header && !document.getElementById('btn-translate-toggle')) {
+    const headerControls = document.getElementById('reader-controls');
+    if (headerControls && !document.getElementById('btn-translate-toggle')) {
         const btn = document.createElement('button');
         btn.id = 'btn-translate-toggle';
-        btn.className = 'text-[10px] text-primary/40 uppercase font-bold tracking-widest mt-4 flex items-center gap-2 hover:text-primary transition-colors';
+        btn.className = 'text-[10px] text-primary/40 uppercase font-bold tracking-widest mt-2 flex items-center gap-2 hover:text-primary transition-colors';
         btn.innerHTML = `<span class="material-symbols-outlined text-sm">translate</span> <span id="trans-btn-text">show translations</span>`;
         btn.onclick = toggleTranslations;
-        header.querySelector('div').appendChild(btn);
+        headerControls.appendChild(btn);
     }
 
     let lineDiv = document.createElement('div');
@@ -946,8 +952,10 @@ function renderReader() {
                         def = await lookupWord(lookupQuery);
                         const rootToken = block.tokens && block.tokens.length > 0 ? block.tokens[0] : null;
                         const rootBase = rootToken && rootToken.basic_form !== '*' ? rootToken.basic_form : null;
-                        if(!def && rootBase && rootBase !== lookupQuery) def = await lookupWord(rootBase);
-                        if (def) { appState.defCache[lookupQuery] = def; saveCache(); }
+                        if(!def && rootBase && rootBase !== lookupQuery) {
+                            def = await lookupWord(rootBase);
+                            if (def) def.isUncertain = true; // Flag for UI warning
+                        }if (def) { appState.defCache[lookupQuery] = def; saveCache(); }
                     }
                     if (appState.selectedBlockIndex === index) updateSidebarInfo(block, index, def);
                 });
@@ -974,31 +982,48 @@ async function renderLineTranslation(lineDiv, lineIdx) {
     const text = Array.from(lineDiv.querySelector('div').childNodes).map(n => n.innerText).join('').trim();
     if (!text) return;
 
-    const transId = `trans-${lineIdx}`;
-    let transEl = lineDiv.querySelector('.translation-line');
+    let transEl = lineDiv.querySelector('.translation-line-wrap');
     if (!transEl) {
         transEl = document.createElement('div');
-        transEl.className = 'translation-line text-sm italic text-on-surface-variant/60 mt-2 opacity-0 transition-opacity duration-500';
+        transEl.className = 'translation-line-wrap flex items-start gap-2 mt-2 group';
+        transEl.innerHTML = `
+            <div class="translation-text text-sm italic text-on-surface-variant/60 flex-grow opacity-0 transition-opacity duration-500">...</div>
+            <button class="edit-trans opacity-0 group-hover:opacity-60 text-[10px] text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-xs">edit</span>
+            </button>
+        `;
         lineDiv.appendChild(transEl);
+        
+        transEl.querySelector('.edit-trans').onclick = () => {
+            const newText = prompt('edit translation (saved locally only):', transEl.querySelector('.translation-text').innerText);
+            if (newText !== null) {
+                if (!appState.transCache) appState.transCache = {};
+                appState.transCache[text] = newText;
+                transEl.querySelector('.translation-text').innerText = newText;
+                saveCache();
+            }
+        };
     }
     
-    transEl.classList.remove('opacity-0');
+    const textContainer = transEl.querySelector('.translation-text');
+    textContainer.classList.remove('opacity-0');
     
     // Check locally first
     if (appState.transCache && appState.transCache[text]) {
-        transEl.innerText = appState.transCache[text];
+        textContainer.innerText = appState.transCache[text];
         return;
     }
 
-    transEl.innerText = '...';
+    textContainer.innerText = '...';
     try {
         const proxyUrl = `https://kotori-proxy.jpgrottextra.workers.dev/?mode=translate&text=${encodeURIComponent(text)}`;
         const res = await fetch(proxyUrl);
         const transText = await res.text();
         if (!appState.transCache) appState.transCache = {};
         appState.transCache[text] = transText;
-        transEl.innerText = transText;
+        textContainer.innerText = transText;
+        saveCache();
     } catch (e) {
-        transEl.innerText = '[translation error]';
+        textContainer.innerText = '[translation error]';
     }
 }
