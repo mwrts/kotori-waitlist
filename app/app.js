@@ -278,22 +278,11 @@ let appState = {
     selectedBlockIndex: null,
     multiSelection: [], // Array of indices
     defCache: {},
-    selectedChatWord: null,
 
     // Practice
     practiceMode: 'list',
     currentFlashcardIndex: 0,
-    isFlashcardFlipped: false,
-
-    // Chat
-    activeChatId: null,
-    characters: [
-        { id: 'aiko', name: 'Aiko', level: 'N3', levelNum: 12, status: 'speaking about daily habits', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQjbSh_QW9IrFCHTu4x6mec_RXaaEKXgiI79_H2t6cYdTMZuqJi_C4zlx11ZysdFWoR7E61v9bA0io5Oxk7xJkbQ6abW19iTR-88RqVuu02neQQjcc6WL8nRCPOslZGv54F5_2Hb2yklwJ2Fbz285RDKIGv1lqpPlFExTYtZipCCBUra9vQApXu1wCenU3OjxoZKfUYZsRi2u2ynt26RQoGkb9wr8rfrBuoSG0wFKXyIc6nCH5cPHY-kkizjn98lsAn9uT0khuQGSG', messages: [
-            { role: 'character', content: '今日は[何](なに)を[食](た)べましたか？', timestamp: Date.now() - 3600000, suggestions: ['where is your favorite place?', 'i like spicy food.', 'do you live in tokyo?'] }
-        ] },
-        { id: 'kenji', name: 'Kenji', level: 'N2', levelNum: 24, status: 'ready to discuss literature', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5lGgYNbutM5-VrUH2TsFCk8brX7PCbXWPvDMvlVScLG6iNxHKIxA7dtvcOYgU6n9wNUKkFk5fn4ztu1yOgHc-u6cA3MG1XOqQrTWq-_c47Wrx4_e2-YoKTW5S0LZUxKOkdTMZuqJi_C4zlx11ZysdFWoR7E61v9bA0io5Oxk7xJkbQ6abW19iTR-88RqVuu02neQQjcc6WL8nRCPOslZGv54F5_2Hb2yklwJ2Fbz285RDKIGv1lqpPlFExTYtZipCCBUra9vQApXu1wCenU3OjxoZKfUYZsRi2u2ynt26RQoGkb9wr8rfrBuoSG0wFKXyIc6nCH5cPHY-kkizjn98lsAn9uT0khuQGSG', messages: [] },
-        { id: 'hana', name: 'Hana', level: 'N5', levelNum: 2, status: 'learning basic greetings', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjU24IVbFRLrFTEJPHitriGfDpbNd6KBd7CEOKPS2c6p0HTcIdkjkx9-lch1k2Fod8tg-82tSWB8M9755vRcWPQdn4hH_23uc1WZvfPLzwlX_1VCigmIvw6Pn34Epdzq1QRxI2t_sDaw1B31oLtZmEYtDHdvmFT9PdN56ssOmHn63S2RXzJYUVcyvMImB2_bDTJVFlSXtpxW0fYs-jesqGDY36DimsEZXaVCz8U7dtndx6ILvwiYYzwnrZGaxJa4NXiTQPhiO4mKyq', messages: [] }
-    ]
+    isFlashcardFlipped: false
 };
 
 function generateId() { return Math.random().toString(36).substr(2, 9); }
@@ -306,7 +295,6 @@ function loadData() {
         appState.folders = parsed.folders || [{ id: 'default', name: 'general' }];
         appState.savedWords = parsed.savedWords || [];
         appState.profile = parsed.profile || appState.profile;
-        appState.characters = parsed.characters || appState.characters;
         if (appState.profile.name === 'zen editorial') appState.profile.name = 'student';
         if (appState.docs.length > 0) appState.activeDocId = appState.docs[0].id;
     }
@@ -332,8 +320,7 @@ function saveData() {
         docs: appState.docs,
         folders: appState.folders,
         savedWords: appState.savedWords,
-        profile: appState.profile,
-        characters: appState.characters
+        profile: appState.profile
     }));
 }
 
@@ -350,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupListeners() {
     // Nav 
-    const navItems = ['home', 'documents', 'reader', 'practice', 'chat'];
+    const navItems = ['home', 'documents', 'reader', 'practice'];
     navItems.forEach(n => {
         const el = document.getElementById(`nav-${n}`);
         if (el) el.addEventListener('click', (e) => { e.preventDefault(); switchView(n); });
@@ -487,16 +474,10 @@ function setupListeners() {
         switchView('creator');
     }));
 
-    // Save vocab in reader or chat
+    // Save vocab in reader
     function saveVocab(statusStr) {
-        let block = null;
         if (appState.selectedBlockIndex !== null) {
-            block = appState.parsedBlocks[appState.selectedBlockIndex];
-        } else if (appState.selectedChatWord) {
-            block = appState.selectedChatWord;
-        }
-
-        if (block) {
+            const block = appState.parsedBlocks[appState.selectedBlockIndex];
             const lookupQuery = block.surface.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
 
             let defText = document.getElementById('def-meaning').innerText;
@@ -644,56 +625,6 @@ function setupListeners() {
             document.getElementById('char-count').innerText = e.target.value.length;
         });
     }
-
-    const chatInput = document.getElementById('chat-input');
-    if (chatInput) {
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendChatMessage();
-            }
-        });
-    }
-
-    const chatSendBtn = document.getElementById('chat-send-btn');
-    if (chatSendBtn) {
-        chatSendBtn.addEventListener('click', sendChatMessage);
-    }
-
-    // Global listener for chat words
-    document.addEventListener('click', (e) => {
-        const chatWord = e.target.closest('.chat-word');
-        if (chatWord) {
-            const surface = chatWord.getAttribute('data-surface');
-            const reading = chatWord.getAttribute('data-reading');
-            
-            const block = { surface, reading, tokens: [] };
-            appState.selectedBlockIndex = null;
-            appState.selectedChatWord = block;
-            
-            const lookupQuery = surface.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
-            
-            const dictSidebar = document.getElementById('dict-sidebar');
-            if (dictSidebar) dictSidebar.classList.remove('translate-y-full');
-            
-            if (appState.defCache[lookupQuery]) {
-                updateSidebarInfo(block, -1, appState.defCache[lookupQuery]);
-            } else {
-                document.getElementById('def-word').innerText = lookupQuery;
-                document.getElementById('def-reading').innerText = kKataToHira(reading);
-                document.getElementById('def-meaning').innerText = 'searching...';
-                lookupWord(lookupQuery).then(res => {
-                    if (res) {
-                        appState.defCache[lookupQuery] = res;
-                        saveCache();
-                        updateSidebarInfo(block, -1, res);
-                    } else {
-                        document.getElementById('def-meaning').innerText = 'no definition found';
-                    }
-                });
-            }
-        }
-    });
 }
 
 
@@ -709,7 +640,7 @@ function loadActiveDoc() {
 
 function render() {
     // Nav 
-    const views = ['home', 'documents', 'creator', 'reader', 'practice', 'profile', 'chat'];
+    const views = ['home', 'documents', 'creator', 'reader', 'practice', 'profile'];
     views.forEach(v => {
         const el = document.getElementById(`${v}-view`);
         if (el) {
@@ -720,7 +651,7 @@ function render() {
     const activeClass = 'bg-[#292b26] text-[#aed18f] rounded-r-full ml-[-24px] pl-[24px] font-bold';
     const inactiveClass = 'text-[#aed18f]/50 hover:bg-[#292b26]/50 hover:text-[#aed18f] rounded-full group';
 
-    ['home', 'documents', 'reader', 'practice', 'chat'].forEach(n => {
+    ['home', 'documents', 'reader', 'practice'].forEach(n => {
         const navEl = document.getElementById(`nav-${n}`);
         if (navEl) {
             // handle "creator" counting as "documents" for nav
@@ -746,7 +677,6 @@ function render() {
     }
     else if (appState.view === 'practice') renderPracticeSwitch();
     else if (appState.view === 'profile') renderProfilePage();
-    else if (appState.view === 'chat') renderChat();
 }
 
 function renderHome() {
@@ -984,7 +914,7 @@ function renderPracticeCard() {
 }
 
 function updateSidebarInfo(block, index, def = null) {
-    if (index !== -1 && appState.selectedBlockIndex !== index) return;
+    if (appState.selectedBlockIndex !== index) return;
 
     document.getElementById('def-word').innerText = block.surface;
     document.getElementById('def-reading').innerText = kKataToHira(block.reading) || block.surface;
@@ -1284,195 +1214,4 @@ function exportToFlashcards() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
-function renderChat() {
-    renderChatList();
-    
-    const placeholder = document.getElementById('chat-placeholder');
-    const activeWindow = document.getElementById('chat-active-window');
-    
-    if (!appState.activeChatId) {
-        placeholder?.classList.remove('hidden');
-        activeWindow?.classList.add('hidden');
-        return;
-    }
-    
-    placeholder?.classList.add('hidden');
-    activeWindow?.classList.remove('hidden');
-    
-    const char = appState.characters.find(c => c.id === appState.activeChatId);
-    if (char) {
-        document.getElementById('chat-header-name').innerText = `${char.name.toLowerCase()} • ${char.level.toLowerCase()}`;
-        document.getElementById('chat-header-status').innerText = char.status.toLowerCase();
-        document.getElementById('chat-header-avatar').src = char.avatar;
-        
-        renderChatMessages();
-    }
-}
-
-function renderChatList() {
-    const list = document.getElementById('chat-list');
-    if (!list) return;
-    
-    list.innerHTML = '';
-    appState.characters.forEach(char => {
-        const isActive = appState.activeChatId === char.id;
-        const div = document.createElement('div');
-        div.className = `p-2 md:p-3 rounded-xl flex items-center justify-center md:justify-start gap-4 cursor-pointer transition-all ${isActive ? 'bg-surface-container-high' : 'hover:bg-surface-container-high/40'}`;
-        div.onclick = () => {
-            appState.activeChatId = char.id;
-            renderChat();
-        };
-        
-        div.innerHTML = `
-            <img src="${char.avatar}" class="w-10 h-10 rounded-full object-cover shrink-0 ${isActive ? 'ring-2 ring-primary ring-offset-2 ring-offset-surface' : 'opacity-60'}" />
-            <div class="hidden md:block overflow-hidden">
-                <p class="text-sm font-bold ${isActive ? 'text-primary' : 'text-on-surface-variant'} lowercase">${char.name}</p>
-                <p class="text-[10px] text-on-surface-variant/50 truncate lowercase">${char.level} • level ${char.levelNum}</p>
-            </div>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function renderChatMessages() {
-    const container = document.getElementById('chat-messages');
-    const suggestionsContainer = document.getElementById('chat-suggestions');
-    if (!container) return;
-    
-    const char = appState.characters.find(c => c.id === appState.activeChatId);
-    if (!char) return;
-    
-    container.innerHTML = '';
-    char.messages.forEach(msg => {
-        const isChar = msg.role === 'character';
-        const div = document.createElement('div');
-        div.className = `flex items-start gap-4 max-w-[90%] md:max-w-[80%] ${isChar ? '' : 'ml-auto flex-row-reverse'}`;
-        
-        const timestamp = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        if (isChar) {
-            div.innerHTML = `
-                <img src="${char.avatar}" class="w-8 h-8 rounded-full object-cover mt-1 shrink-0 bg-surface-container" />
-                <div class="space-y-2">
-                    <div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none inline-block border border-outline-variant/10 shadow-sm">
-                        <div class="flex flex-wrap gap-x-1 gap-y-2 font-japanese leading-[1.8] text-xl">
-                            ${renderSegmentedChatMessage(msg.content, 'character')}
-                        </div>
-                    </div>
-                    <p class="text-[9px] text-on-surface-variant/40 ml-1 uppercase tracking-widest font-bold">${timestamp}</p>
-                </div>
-            `;
-        } else {
-            div.innerHTML = `
-                <div class="space-y-2 text-right">
-                    <div class="bg-primary-container text-on-primary-fixed p-4 rounded-2xl rounded-tr-none inline-block shadow-md">
-                        <p class="font-quicksand lowercase leading-relaxed text-sm font-medium">
-                            ${msg.content}
-                        </p>
-                    </div>
-                    <p class="text-[9px] text-on-surface-variant/40 mr-1 uppercase tracking-widest font-bold">${timestamp}</p>
-                </div>
-            `;
-        }
-        container.appendChild(div);
-    });
-    
-    // Auto scroll to bottom
-    container.scrollTop = container.scrollHeight;
-    
-    // Suggestions
-    if (suggestionsContainer) {
-        suggestionsContainer.innerHTML = '';
-        const lastMsg = char.messages[char.messages.length - 1];
-        if (lastMsg && lastMsg.role === 'character' && lastMsg.suggestions) {
-            lastMsg.suggestions.forEach(s => {
-                const btn = document.createElement('button');
-                btn.className = 'bg-surface-container-low border border-outline-variant/10 px-4 py-2 rounded-full text-xs font-quicksand lowercase text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-all shadow-sm active:scale-95';
-                btn.innerText = s;
-                btn.onclick = () => {
-                    const chatInput = document.getElementById('chat-input');
-                    if (chatInput) {
-                        chatInput.value = s;
-                        sendChatMessage();
-                    }
-                };
-                suggestionsContainer.appendChild(btn);
-            });
-        }
-    }
-}
-
-function renderSegmentedChatMessage(text, role) {
-    if (!tokenizer) return text; 
-    const blocks = segmentText(text);
-    let html = '';
-    blocks.forEach((block) => {
-        if (block.isPunct) {
-            html += `<span class="whitespace-pre-wrap">${block.surface}</span>`;
-        } else {
-            const furiganaParts = extractFurigana(block.surface, block.reading);
-            let rubyHtml = '';
-            furiganaParts.forEach(p => {
-                if (p.rt) rubyHtml += `<ruby>${p.text}<rt>${p.rt}</rt></ruby>`;
-                else rubyHtml += p.text;
-            });
-            
-            const colorClass = role === 'character' ? 'hover:bg-primary/20 hover:text-primary' : 'hover:bg-white/20';
-            html += `<span class="chat-word cursor-pointer transition-all rounded px-0.5 ${colorClass}" data-surface="${block.surface.replace(/"/g, '&quot;')}" data-reading="${block.reading}">${rubyHtml}</span>`;
-        }
-    });
-    return html;
-}
-
-function sendChatMessage() {
-    const input = document.getElementById('chat-input');
-    if (!input || !input.value.trim() || !appState.activeChatId) return;
-    
-    const char = appState.characters.find(c => c.id === appState.activeChatId);
-    if (!char) return;
-
-    const content = input.value.trim();
-    input.value = '';
-    
-    char.messages.push({
-        role: 'user',
-        content: content,
-        timestamp: Date.now()
-    });
-    
-    renderChatMessages();
-    saveData();
-    
-    // Simulate thinking
-    setTimeout(() => {
-        generateCharacterResponse(char.id);
-    }, 1200);
-}
-
-function generateCharacterResponse(charId) {
-    const char = appState.characters.find(c => c.id === charId);
-    if (!char) return;
-    
-    const responses = [
-        { content: '[今日](きょう)はいい[天気](てんき)ですね。', suggestions: ['yes, it is.', 'it is a bit cold still.', 'i love sunny days.'] },
-        { content: '[日本語](にほんご)の[勉強](べんきょう)はどうですか？', suggestions: ['it is fun!', 'it is quite difficult.', 'i love learning kanji.'] },
-        { content: '[何](なに)か[質問](しつもん)がありますか？', suggestions: ['how do you say "bird"?', 'tell me about your hobbies.', 'no questions for now.'] },
-        { content: 'そうですね。[面白](おもしろ)い[話](はなし)です！', suggestions: ['indeed.', 'i think so too.', 'tell me more.'] },
-        { content: '[明日](あした)の[予定](よてい)は何ですか？', suggestions: ['i am going to shibuya.', 'just studying at home.', 'i have a meeting.'] }
-    ];
-    
-    const randomRes = responses[Math.floor(Math.random() * responses.length)];
-    
-    char.messages.push({
-        role: 'character',
-        content: randomRes.content,
-        timestamp: Date.now(),
-        suggestions: randomRes.suggestions
-    });
-    
-    renderChatMessages();
-    saveData();
 }
