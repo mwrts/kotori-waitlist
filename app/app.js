@@ -1,4 +1,4 @@
-﻿/** JS Application Logic */
+/** JS Application Logic */
 
 let tokenizer = null;
 
@@ -69,29 +69,41 @@ function segmentText(text) {
         const parts = text.split(separator);
         const blocks = [];
         let runningPos = 1;
-
+//
         for (const part of parts) {
             if (part.length === 0) {
                 runningPos++;
                 continue;
             }
 
-            // Still tokenize a version of the part without markup to get POS/Base forms for Jisho
-            const plainPart = part.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
-            const tokens = tokenizer.tokenize(plainPart);
+            // Split on newlines first so they become their own blocks
+            const subParts = part.split(/(\n)/);
+            for (const sub of subParts) {
+                if (sub === '\n') {
+                    blocks.push({ surface: '\n', reading: '', tokens: [], isPunct: true, wordPosition: runningPos });
+                    runningPos++;
+                    continue;
+                }
+                if (sub.length === 0) continue;
 
-            // Check if it's punctuation/whitespace (same 'isWord' spirit as chat)
-            const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(plainPart);
-            const isPunct = !hasJapanese || (tokens.length === 1 && tokens[0].pos === '記号');
+                // Still tokenize a version of the part without markup to get POS/Base forms for Jisho
+                const plainPart = sub.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+                const tokens = tokenizer.tokenize(plainPart);
 
-            blocks.push({
-                surface: part, // Keep markup for rendering
-                reading: tokens.map(t => t.reading || '').join(''),
-                tokens: (tokens.length > 0) ? tokens : [{ surface_form: part, basic_form: plainPart, pos: '名詞' }],
-                isPunct: isPunct,
-                wordPosition: runningPos
-            });
-            runningPos += part.length + 1;
+                // Check if it's punctuation/whitespace (same 'isWord' spirit as chat)
+                const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(plainPart);
+                const isPunct = !hasJapanese || (tokens.length === 1 && tokens[0].pos === '記号');
+
+                blocks.push({
+                    surface: sub, // Keep markup for rendering
+                    reading: tokens.map(t => t.reading || '').join(''),
+                    tokens: (tokens.length > 0) ? tokens : [{ surface_form: sub, basic_form: plainPart, pos: '名詞' }],
+                    isPunct: isPunct,
+                    wordPosition: runningPos
+                });
+                runningPos += sub.length;
+            }
+            runningPos++; // account for the separator character
         }
         return blocks;
     }
@@ -119,6 +131,23 @@ function segmentText(text) {
             forceJoin = true;
             continue;
         }
+
+        // If the token contains a newline (kuromoji sometimes bundles \n with whitespace),
+        // split it out so the renderer can create visual line breaks
+        if (token.surface_form.includes('\n')) {
+            const subParts = token.surface_form.split(/(\n)/);
+            for (const sp of subParts) {
+                if (sp === '\n') {
+                    blocks.push({ surface: '\n', reading: '', tokens: [{ surface_form: '\n', pos: '記号' }], isPunct: true });
+                    currentBlock = null;
+                } else if (sp.length > 0) {
+                    blocks.push({ surface: sp, reading: '', tokens: [{ surface_form: sp, pos: '記号' }], isPunct: true });
+                    currentBlock = null;
+                }
+            }
+            continue;
+        }
+
         const prevToken = currentBlock ? currentBlock.tokens[currentBlock.tokens.length - 1] : null;
         const isDependent =
             prevToken && !isSymbolOrWhitespace(token) && !isSymbolOrWhitespace(prevToken) && (
@@ -959,8 +988,8 @@ function updateSidebarInfo(block, index, def = null) {
                 const btn = document.createElement('button');
                 const isActive = kKataToHira(r) === displayReading;
                 btn.className = `px-2.5 py-1 rounded-lg text-xs font-japanese font-bold transition-all cursor-pointer ${isActive
-                        ? 'bg-primary text-on-primary-fixed shadow-sm'
-                        : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-bright hover:text-primary border border-outline-variant/20'
+                    ? 'bg-primary text-on-primary-fixed shadow-sm'
+                    : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-bright hover:text-primary border border-outline-variant/20'
                     }`;
                 btn.innerText = r;
                 btn.addEventListener('click', () => {
@@ -1097,8 +1126,8 @@ function renderReader() {
     lineDiv.appendChild(currentJapaneseLine);
 
     appState.parsedBlocks.forEach((block, index) => {
-        if (block.surface === '\n' || block.surface === '|' || block.surface === '·') {
-            if (block.surface !== '\n') return;
+        // Check if block contains a newline (handles exact '\n' and newlines inside whitespace)
+        if (block.surface.includes('\n')) {
             article.appendChild(lineDiv);
             lineDiv = document.createElement('div');
             lineDiv.className = 'mb-8';
@@ -1107,6 +1136,7 @@ function renderReader() {
             lineDiv.appendChild(currentJapaneseLine);
             return;
         }
+        if (block.surface === '|' || block.surface === '·') return;
 
         const span = document.createElement('span');
         span.setAttribute('data-index', index);
